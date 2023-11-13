@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "@/": "./src/",
+    "@utils/": "./../utils/",
+    "ramda/": "https://deno.land/x/ramda@v0.27.2/",
+    "lodash": "https://esm.sh/v133/lodash-es@4.17.21/es2022/lodash-es.mjs"
+  }
+}
