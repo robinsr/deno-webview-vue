@@ -1,20 +1,42 @@
 <script setup lang="ts">
-import { ref, isProxy, toRaw, toValue, isRef, unref } from 'vue';
-import { HotKey } from '../../keys/key-types.ts';
-import { KeySym } from '../../keys/keyboard-symbol.ts';
+import { computed, toValue } from 'vue';
+import { HotKey } from '@keys/key-types.ts';
+import { FocusState } from './types.ts';
+import "core-js/actual"
 
 import KBD from './KBD.vue';
 
 const props = withDefaults(defineProps<{
   hotkey: HotKey;
-  keyFocus: KeySym;
+  keyFocus: FocusState;
 }>(), {
-  keyFocus: null
+  keyFocus: { focus: 'none' }
 });
+
+const keyIds = new Set(props.hotkey.symbols.map(k => k.id));
+
+const isHL = computed((): boolean => {
+  const { focus, hotkey, key } = toValue(props.keyFocus);
+
+  if (!focus || focus === 'none') {
+    return false;
+  }
+
+  if (focus === 'hotkey') {
+    return hotkey.id === props.hotkey.id;
+  }
+
+  if (focus === 'key') {
+    return keyIds.has(key.id);
+  }
+
+  return false;
+});
+
 </script>
 
 <template>
-  <li class="shortcut-item" :class="{ 'hover': false }">
+  <li class="shortcut-item" :class="{ 'highlight': isHL }">
     <span class="shortcut-item-label">{{ hotkey.label }}</span>
     <KBD :symbols="hotkey.symbols" />
   </li>
@@ -31,11 +53,11 @@ const props = withDefaults(defineProps<{
   cursor: pointer;
 
   &:hover {
-    background-color: var(--std-key-hl-color);
+    background-color: var(--fuchsia-blue);
   }
 
-  &.hover {
-    background-color: var(--std-key-hl-color);
+  &.highlight {
+    background-color: var(--fuchsia-blue);
   }
 }
 </style>

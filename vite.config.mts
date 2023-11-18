@@ -6,12 +6,26 @@ import 'npm:vue-router@4';
 import 'npm:simple-keyboard@3.7.26';
 import 'npm:simple-keyboard-layouts@3.3.34';
 import 'npm:lucide-vue-next@0.292.0';
-import 'lodash';
 import '@utils/num.ts';
-import './deps.client.ts';
+import '@utils/text.ts';
+import '@keys/symbol.ts';
+import 'lodash';
+import * as corejs from "corejs"
+import 'nanoid';
 
-import * as json from './import_map.json' assert { type: "json" };
+type ImportMap = {
+  imports: {
+    [specifier: string]: string;
+  },
+  scopes?: {
+    [specifier: string]: string;
+  }
+}
 
+const decoder = new TextDecoder('utf-8');
+const importMap = JSON.parse(decoder.decode(Deno.readFileSync('./import_map.json'))) as ImportMap;
+
+console.log(importMap);
 
 const vueStuff = {
   template: {
@@ -31,12 +45,7 @@ export default defineConfig({
     vuePlugin(vueStuff)
   ],
   resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-      '@utils/': fileURLToPath(new URL('./../utils/', import.meta.url)),
-      "ramda/": "https://deno.land/x/ramda@v0.27.2/",
-      "lodash": "https://esm.sh/v133/lodash-es@4.17.21/es2022/lodash-es.mjs"
-    },
+    alias: importMap.imports,
   },
   server: {
     headers: {

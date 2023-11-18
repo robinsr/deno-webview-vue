@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Ear } from 'lucide-vue-next';
+import DebugProp from '../DebugProp.vue';
+import { KeySym } from '@keys/keyboard-key.ts';
+
 
 defineProps<{
-  inspect: object | undefined;
+  inspect?: object | undefined;
+  keys?: KeySym[] | undefined;
+  clicked?: object | undefined;
 }>()
 
 const $$keyRef = ref(null);
@@ -29,15 +34,21 @@ const stopCapture = () => {
 
 <template>
   <section>
+    <section>
+      <x-card>
+        <main>
+          <x-label>Keys:</x-label>
+          <DebugProp :obj="keys && keys.map(k => k)" :log="true" />
+          <x-label>Clicked:</x-label>
+          <DebugProp :obj="clicked" />
+        </main>
+      </x-card>
+    </section>
     <section v-if="inspect">
       <x-card>
         <main>
           <x-label>Inspect:</x-label>
-          <ul>
-            <li v-for="(prop, key) in inspect">
-              {{ key }}: <code>{{ prop }}</code>
-            </li>
-          </ul>
+          <DebugProp :obj="inspect"/>
         </main>
       </x-card>
     </section>

@@ -4,7 +4,10 @@ type AppRoute = {
   icon: string;
   label: string;
   path: string;
-  component: () => unknown;
+  component?: () => unknown;
+  components?: {
+    [name: string]: () => unknown
+  }
 }
 
 export const routes: AppRoute[] = [
@@ -12,7 +15,10 @@ export const routes: AppRoute[] = [
     icon: 'home',
     label: 'Main Page',
     path: '/',
-    component: () => import('@/pages/HomePage.vue'),
+    components: {
+      default: () => import('@/pages/HomePage.vue'),
+      LeftSidebar: () => import('@/pages/HomePage.Menu.vue'),
+    }
   },
   {
     icon: 'code',

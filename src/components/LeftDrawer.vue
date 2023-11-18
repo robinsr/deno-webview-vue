@@ -22,6 +22,7 @@ const close = (e: PointerEvent) => {
             <x-label>{{ route.label }}</x-label>
           </x-button>
         </router-link>
+        <router-view class="view left-sidebar" name="LeftSidebar"></router-view>
       </nav>
     </dialog>
   </x-button>

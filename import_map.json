@@ -1,8 +1,11 @@
 {
   "imports": {
     "@/": "./src/",
-    "@utils/": "./../utils/",
+    "@utils/": "/Users/ryan/workspace/deno/utils/",
+    "@keys/": "/Users/ryan/workspace/deno/deno-keys/keys/",
     "ramda/": "https://deno.land/x/ramda@v0.27.2/",
-    "lodash": "https://esm.sh/v133/lodash-es@4.17.21/es2022/lodash-es.mjs"
+    "lodash": "https://esm.sh/v133/lodash-es@4.17.21/es2022/lodash-es.mjs",
+    "nanoid": "https://esm.sh/v133/nanoid@5.0.2/es2022/nanoid.mjs",
+    "corejs": "https://esm.sh/v133/core-js@3.33.2/es2022/actual.mjs"
   }
 }

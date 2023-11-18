@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { HotKey } from '../../keys/key-types.ts';
-import { KeySym } from '../../keys/keyboard-symbol.ts';
+import { HotKey } from '@keys/key-types.ts';
+import { FocusState } from './types.ts';
 
+import UICard from '../layout/UICard.vue';
 import ShortcutItem from './ShortcutItem.vue';
 
 withDefaults(defineProps<{
   title: string;
   items: HotKey[];
-  keyFocus: KeySym;
+  keyFocus: FocusState;
 }>(), {
-  keyFocus: null
+  title: '',
+  items: [],
+  keyFocus: { focus: 'none' }
 })
 
 const emit = defineEmits<{
@@ -20,21 +23,18 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <x-card class="shortcut-group">
-    <main>
-      <strong>{{ title }}</strong>
-      <ul>
-        <ShortcutItem
-            v-for="item in items"
-            :hotkey="item"
-            :key-focus="keyFocus"
-            @mouseenter="$emit('itemHovered', item)"
-            @mouseleave="$emit('itemLeft', item)"
-            @click="$emit('itemClicked', item)"
-        />
-      </ul>
-    </main>
-  </x-card>
+  <UICard :title="title" class="shortcut-group">
+    <ul>
+      <ShortcutItem
+          v-for="item in items"
+          :hotkey="item"
+          :key-focus="keyFocus"
+          @mouseenter="$emit('itemHovered', item)"
+          @mouseleave="$emit('itemLeft', item)"
+          @click="$emit('itemClicked', item)"
+      />
+    </ul>
+  </UICard>
 </template>
 
 <style scoped>
