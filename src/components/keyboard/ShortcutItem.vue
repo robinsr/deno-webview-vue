@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, inject, toValue } from 'vue';
-import { injectFocus } from '../../providers/inject.ts';
 import { HotKey } from '../../shortcuts/ShortcutApp.ts';
-import { FocusState } from './types.ts';
-import "core-js/actual"
+import { useFocusMatches } from './useKeyFocus.ts';
 
 import KBD from './KBD.vue';
 
@@ -12,22 +9,7 @@ const props = defineProps<{
 }>();
 
 const keyIds = new Set(props.hotkey.symbols.map(k => k.id));
-
-const keyfocus = inject(injectFocus, ref<FocusState>({ focus: 'none' }));
-
-const $isActive = computed((): boolean => {
-  const { focus } = keyfocus.value;
-
-  switch(focus) {
-    case 'hotkey':
-      return keyfocus.value.hotkey.id === props.hotkey.id;
-    case 'key':
-      return keyIds.has(keyfocus.value.key.id);
-    case 'none':
-    default:
-      return false;
-  }
-});
+const $isActive = useFocusMatches(keyIds);
 
 </script>
 

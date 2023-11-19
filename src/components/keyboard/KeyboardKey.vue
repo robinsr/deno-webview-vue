@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, inject, ref, unref } from 'vue';
-import { injectFocus } from '../../providers/inject.ts';
+import { ref, unref } from 'vue';
 import { KeySym } from '@keys/key-types.ts';
-import { FocusState, KeyPress } from './types.ts';
+import { KeyPress } from './types.ts';
+import { useFocusIncludes } from './useKeyFocus.ts';
 
 const emit = defineEmits<{
   (e: 'keyClicked', item: KeyPress): void;
@@ -26,23 +26,8 @@ const $width = ref(width);
 
 const profile = 'default';
 const $keyId = ref(`${profile}-r${props.rowNum}b${props.buttonNum}`);
+const $isActive = useFocusIncludes(new Set([id]));
 
-const $keyfocus = inject(injectFocus, ref<FocusState>({
-  focus: 'none'
-}));
-
-const $isActive = computed(() => {
-  switch($keyfocus.value.focus) {
-    case 'hotkey':
-      return $keyfocus.value.hotkey.symbols.map(sym => sym.id)
-          .includes(props.symbol.id);
-    case 'key':
-      return $keyfocus.value.key.id === props.symbol.id;
-    case 'none':
-    default:
-      return false;
-  }
-});
 
 const handleClick = () => {
   emit('keyClicked', { button: props.symbol.id });

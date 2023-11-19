@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref, provide, inject, computed, toValue } from 'vue';
 import { injectApps, injectFocus } from '../../providers/inject.ts';
-import { KeySym, HotKey, HotKeyGroup } from '@keys/key-types.ts';
+import { KeySym } from '@keys/key-types.ts';
 import { getSymbolForKey } from '@keys/symbol.ts';
+import { HotKey, HotKeyGroup } from '../../shortcuts/ShortcutApp.ts';
 import { FocusState, KeyPress } from './types.ts'
 
 import Keyboard  from './Keyboard.vue';
@@ -11,10 +12,11 @@ import UICard from '../layout/UICard.vue';
 import UIColumns from '../layout/UIColumns.vue';
 import ListCard from './ListCard.vue';
 
-const foo = inject(injectApps)
-const apps = Object.values(foo);
-const $apps = ref<HotKeyGroup[]>(apps);
-const $selectedApp = ref<HotKeyGroup | null>(apps[0]);
+const apps = inject(injectApps, {});
+const appNames = Object.keys(apps)
+const appConfigs = Object.values(apps);
+const $apps = ref<HotKeyGroup[]>(appConfigs);
+const $selectedApp = ref<HotKeyGroup>(appConfigs[0]);
 
 const $columns = ref<number>(3);
 const $inspect = ref<object>();
@@ -40,10 +42,6 @@ const $keys = computed((): KeySym[] => {
 
   return $highlighted.value ? $highlighted.value.symbols : [];
 });
-
-const $keyFocus = computed((): KeySym[] => {
-  return [];
-})
 
 const onShortcutHover = (hovered: HotKey) => {
   if ($clicked.value) {

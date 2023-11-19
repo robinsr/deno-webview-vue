@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import "core-js/actual";
 import { ref, inject, unref } from 'vue';
 import "simple-keyboard/build/css/index.css";
 import Keyboards from '@keys/keyboard-config.ts';
@@ -29,7 +28,6 @@ const $classToggles = ref([
   'hg-theme-default',
   'hg-layout-default',
   'vue-shortcuts',
-  //'flex-layout',
   'grid-layout',
 ]);
 
@@ -169,7 +167,10 @@ input {
         height: var(--sm-key-height);
       }
     }
+  }
 
+  .simple-keyboard-main {
+    max-width: 1200px;
   }
 
 }
