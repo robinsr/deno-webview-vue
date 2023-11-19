@@ -24,7 +24,7 @@ const emit = defineEmits<{
 
 <template>
   <UICard :title="title" class="shortcut-group">
-    <ul>
+    <ul class="shortcut-list">
       <ShortcutItem
           v-for="item in items"
           :hotkey="item"
@@ -41,6 +41,10 @@ const emit = defineEmits<{
 .shortcut-group {
   break-inside: avoid-column;
   padding: 0;
-  margin: 0 10px 15px 10px
+  margin: 0 10px 15px 10px;
+
+  .shortcut-list > *:nth-child(odd) {
+    backdrop-filter: brightness(80%);
+  }
 }
 </style>

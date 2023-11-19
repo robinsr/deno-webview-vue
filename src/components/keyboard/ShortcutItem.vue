@@ -1,42 +1,38 @@
 <script setup lang="ts">
-import { computed, toValue } from 'vue';
-import { HotKey } from '@keys/key-types.ts';
+import { ref, computed, inject, toValue } from 'vue';
+import { injectFocus } from '../../providers/inject.ts';
+import { HotKey } from '../../shortcuts/ShortcutApp.ts';
 import { FocusState } from './types.ts';
 import "core-js/actual"
 
 import KBD from './KBD.vue';
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   hotkey: HotKey;
-  keyFocus: FocusState;
-}>(), {
-  keyFocus: { focus: 'none' }
-});
+}>();
 
 const keyIds = new Set(props.hotkey.symbols.map(k => k.id));
 
-const isHL = computed((): boolean => {
-  const { focus, hotkey, key } = toValue(props.keyFocus);
+const keyfocus = inject(injectFocus, ref<FocusState>({ focus: 'none' }));
 
-  if (!focus || focus === 'none') {
-    return false;
+const $isActive = computed((): boolean => {
+  const { focus } = keyfocus.value;
+
+  switch(focus) {
+    case 'hotkey':
+      return keyfocus.value.hotkey.id === props.hotkey.id;
+    case 'key':
+      return keyIds.has(keyfocus.value.key.id);
+    case 'none':
+    default:
+      return false;
   }
-
-  if (focus === 'hotkey') {
-    return hotkey.id === props.hotkey.id;
-  }
-
-  if (focus === 'key') {
-    return keyIds.has(key.id);
-  }
-
-  return false;
 });
 
 </script>
 
 <template>
-  <li class="shortcut-item" :class="{ 'highlight': isHL }">
+  <li class="shortcut-item" :class="[{ 'highlight': $isActive }]">
     <span class="shortcut-item-label">{{ hotkey.label }}</span>
     <KBD :symbols="hotkey.symbols" />
   </li>
@@ -47,7 +43,8 @@ const isHL = computed((): boolean => {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: 0 0.8em;
+  align-items: center;
+  margin: 0 0.4em;
   border-radius: 0.2em;
   padding: 0 0.2em;
   cursor: pointer;

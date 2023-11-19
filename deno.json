@@ -8,8 +8,14 @@
     "clean": "rm -rf .vite dist node_modules"
   },
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "types": [
       "https://esm.sh/@types/core-js/index.d.ts"
-    ]
+    ],
+    "paths": {
+      "@keys/*": [
+        "../deno-keys/keys/"
+      ]
+    }
   }
 }
