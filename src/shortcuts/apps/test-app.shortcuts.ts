@@ -5,6 +5,9 @@ const TestApp: ShortcutGroup = {
   groupings: [{
     name: 'Basic',
     items: [
+      { label: 'Single K', keys: 'k' },
+      { label: 'Single J', keys: 'j' },
+      { label: 'Just Kidding', keys: 'j k' },
       { label: 'Cmd J', keys: '⌘ j' },
       { label: 'Cmd Capital-J', keys: '⌘ J' },
       { label: 'Cmd Shift K', keys: '⌘ ⇧ k' },

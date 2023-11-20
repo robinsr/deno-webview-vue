@@ -29,64 +29,76 @@ const handleAppSelect = (e) => {
 
 
 const $highlighted = ref<HotKey>();
-const $clicked = ref<FocusState>({ focus: 'none' });
+const $focusState = ref<FocusState>({ focus: 'none' });
 
-const $keys = computed((): KeySym[] => {
-  if ($clicked.value.focus == 'hotkey') {
-    return $clicked.value.hotkey.symbols;
+provide(injectFocus, $focusState);
+
+const setFocus = (s: 'hotkey' | 'key' | 'none', data?: HotKey | KeySym): void => {
+  let newState: FocusState = { focus: 'none' };
+
+  if (s === 'hotkey') {
+    newState = { focus: 'hotkey', hotkey: data as HotKey };
   }
 
-  if ($clicked.value.focus == 'key') {
-    return [ $clicked.value.key ];
+  if (s === 'key') {
+    newState = { focus: 'key', key: data as KeySym };
+  }
+
+  $focusState.value = newState;
+}
+
+const $keys = computed((): KeySym[] => {
+  if ($focusState.value.focus == 'hotkey') {
+    return $focusState.value.hotkey.symbols;
+  }
+
+  if ($focusState.value.focus == 'key') {
+    return [ $focusState.value.key ];
   }
 
   return $highlighted.value ? $highlighted.value.symbols : [];
 });
 
 const onShortcutHover = (hovered: HotKey) => {
-  if ($clicked.value) {
-    return;
+  switch ($focusState.value.focus) {
+    case 'none':
+      return $highlighted.value = hovered;
+    default:
+      return;
   }
-
-  $highlighted.value = hovered;
 }
 
 const onShortcutClick = (clicked: HotKey) => {
   $inspect.value = clicked;
 
-  const { focus, hotkey } = toValue($clicked);
-
-  if (!$clicked.value || $clicked.value.focus === 'none') {
-    $clicked.value = { focus: 'hotkey', hotkey: clicked }
+  switch ($focusState.value.focus) {
+    case 'none':
+      return setFocus('hotkey', clicked);
+    case 'hotkey':
+      if ($focusState.value.hotkey.id === clicked.id) {
+        return setFocus('none');
+      }
+    default:
+      return setFocus('hotkey', clicked);
   }
-
-  if (focus === 'hotkey' && hotkey.id === clicked.id) {
-    $clicked.value = { focus: 'none' };
-  }
-
-  $clicked.value = { focus: 'hotkey', hotkey: clicked }
 }
 
 const onKeyPress = ({ button, ...props }: KeyPress) => {
   $inspect.value = { button, ...props };
 
-  const clickedSym = getSymbolForKey(button);
-
-  const { focus, key, hotkey } = toValue($clicked);
-
-  if (focus && focus === 'key' && key.id === clickedSym.id) {
-    $clicked.value = { focus: 'none' };
-    return;
+  switch ($focusState.value.focus) {
+    case 'key':
+      if ($focusState.value.key.id === button) {
+        return setFocus('none');
+      }
+    default:
+      setFocus('key', getSymbolForKey(button));
   }
-
-  $clicked.value = { focus: 'key', key: clickedSym }
 }
 
 const clearSelected = () => {
-  $clicked.value = { focus: 'none' };
+  setFocus('none');
 }
-
-provide(injectFocus, $clicked);
 
 </script>
 
@@ -124,14 +136,13 @@ provide(injectFocus, $clicked);
                   :key="$selectedApp.name+$gi"
                   :title="$selectedApp.name + ' - ' + $group.name as string"
                   :items="$group.items"
-                  :key-focus="$clicked"
                   @item-hovered="onShortcutHover"
                   @item-clicked="onShortcutClick"
                   :debug="$debug" />
       </UIColumns>
     </div>
-    <Keyboard :keys="$keys" @onKeyPress="onKeyPress" />
-    <KeyDebug v-if="$debug" :keys="$keys" :clicked="$clicked" :inspect="$inspect"/>
+    <Keyboard @onKeyPress="onKeyPress" />
+    <KeyDebug v-if="$debug" :keys="$keys" :clicked="$focusState" :inspect="$inspect"/>
   </div>
 </template>
 

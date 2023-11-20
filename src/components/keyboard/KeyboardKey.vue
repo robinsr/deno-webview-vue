@@ -2,7 +2,9 @@
 import { ref, unref } from 'vue';
 import { KeySym } from '@keys/key-types.ts';
 import { KeyPress } from './types.ts';
-import { useFocusIncludes } from './useKeyFocus.ts';
+import { useFocusIncludesAll } from './useKeyFocus.ts';
+
+import KeyInfo from './KeyInfo.vue';
 
 const emit = defineEmits<{
   (e: 'keyClicked', item: KeyPress): void;
@@ -17,7 +19,7 @@ const props = defineProps<{
 
 const el = ref(null);
 
-const { id, name, legend, width, height } = unref(props.symbol);
+const { id, name, legend, width, height, offset } = unref(props.symbol);
 
 const $id = ref(id);
 const $name = ref(name);
@@ -26,7 +28,7 @@ const $width = ref(width);
 
 const profile = 'default';
 const $keyId = ref(`${profile}-r${props.rowNum}b${props.buttonNum}`);
-const $isActive = useFocusIncludes(new Set([id]));
+const $isActive = useFocusIncludesAll(new Set([id]));
 
 
 const handleClick = () => {
@@ -34,9 +36,10 @@ const handleClick = () => {
 }
 
 const $gridStyles = () => {
-  const start = (props.gridLeft || 0) + 1;
+  const start = (props.gridLeft || 0) + 1 + offset;
   return {
-    'grid-column': `${start} / span ${width}`
+    'grid-column': `${start} / span ${width}`,
+    'height': `${height * 100}%`,
   }
 }
 </script>
@@ -53,8 +56,7 @@ const $gridStyles = () => {
           'btn-name-' + name,
           { 'highlight-btn': $isActive }
       ]"
-       :style="$gridStyles()"
-  >
+       :style="$gridStyles()">
     <span>{{ $cap }}</span>
   </div>
 </template>
@@ -64,17 +66,15 @@ const $gridStyles = () => {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 
   margin: 0;
   padding: 0;
-  border-bottom: 1px solid #b5b5b5;
-  /*border-radius: 5px;*/
+  border-bottom: 3px solid var(--key-border-color);
   border-radius: calc(0.4vb);
 
-  overflow: hidden;
   text-wrap: nowrap;
-  /*font-size: 1.55vi;*/
-  font-size: 1.55cqw;
+  font-size: 0.85cqw;
 
   background-color: var(--default-key-color);
   transition: background-color 0.1s ease-out;
@@ -83,7 +83,6 @@ const $gridStyles = () => {
   box-shadow: 0 0 3px -1px rgba(0,0,0,.3);
   box-sizing: border-box;
   cursor: pointer;
-  height: 40px;
 
 
   &.btn-name-cmd,

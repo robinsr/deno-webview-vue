@@ -3,6 +3,10 @@ import { type Ref } from 'vue';
 import { injectFocus } from '../../providers/inject.ts';
 import { FocusState } from './types.ts';
 
+const log = (...msg: any[]) => {
+  console.debug(`%c ${msg}`, 'background: #222; color: #bada55');
+}
+
 const getSymbols = (keyfocus: FocusState): string[] => {
   switch(keyfocus.focus) {
     case 'hotkey':
@@ -17,15 +21,42 @@ const getSymbols = (keyfocus: FocusState): string[] => {
 
 const default_focus: FocusState = { focus: 'none' };
 
-
-export function useFocusIncludes(keyIds: Set<string>): boolean {
+export function useFocusIncludesOne(keyIds: Set<string>): boolean {
   const keyfocus = inject<Ref<FocusState>>(injectFocus, ref(default_focus));
 
   return computed((): boolean => {
-    const  symbols = getSymbols(keyfocus.value);
+    // This form is intended only for focus on a single key,
+    // and should not match on single-key shortcuts
+    if (keyfocus.value.focus !== 'key') {
+      return false;
+    }
+
+    const symbols = getSymbols(keyfocus.value);
+
+    if (symbols.length === 1) {
+      const match = Array.from(keyIds).includes(symbols[0]);
+      if (match) {
+        console.debug("IncludesOne:", symbols, keyIds, match);
+      }
+      return match;
+    } else {
+      return false;
+    }
+  });
+}
+
+export function useFocusIncludesAll(keyIds: Set<string>): boolean {
+  const keyfocus = inject<Ref<FocusState>>(injectFocus, ref(default_focus));
+
+  return computed((): boolean => {
+    const symbols = getSymbols(keyfocus.value);
 
     if (symbols.length) {
-      return Array.from(keyIds).filter(id => !symbols.includes(id)).length === 0;
+      const remainingKeyIds = Array.from(keyIds).filter(id => !symbols.includes(id));
+      if (remainingKeyIds.length === 0) {
+        console.debug("IncludesAll:", symbols, keyIds, remainingKeyIds);
+      }
+      return remainingKeyIds.length === 0;
     } else {
       return false;
     }
@@ -39,7 +70,11 @@ export function useFocusMatches(keyIds: Set<string>): boolean {
     const symbols = getSymbols(keyfocus.value);
 
     if (symbols.length && symbols.length === keyIds.size) {
-      return symbols.filter(id => !keyIds.has(id)).length === 0;
+      const difference = symbols.filter(id => !keyIds.has(id))
+      if (difference.length === 0) {
+        console.debug("Matches", symbols, keyIds, difference);
+      }
+      return difference.length === 0;
     } else {
       return false;
     }

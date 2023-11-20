@@ -16,6 +16,7 @@ type KeyboardKeyFocus = {
 }
 
 export type FocusState = NothingFocused | HotkeyFocus | KeyboardKeyFocus;
+export type FocusStateType = FocusState["focus"]
 
 export type KeyEl = {
   id: string;

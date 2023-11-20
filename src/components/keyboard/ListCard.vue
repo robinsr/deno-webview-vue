@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { HotKey } from '@keys/key-types.ts';
-import { FocusState } from './types.ts';
+import { HotKey } from '../../shortcuts/ShortcutApp.ts';
 
 import UICard from '../layout/UICard.vue';
 import ShortcutItem from './ShortcutItem.vue';
@@ -8,11 +7,9 @@ import ShortcutItem from './ShortcutItem.vue';
 withDefaults(defineProps<{
   title: string;
   items: HotKey[];
-  keyFocus: FocusState;
 }>(), {
   title: '',
-  items: [],
-  keyFocus: { focus: 'none' }
+  items: []
 })
 
 const emit = defineEmits<{
@@ -28,7 +25,6 @@ const emit = defineEmits<{
       <ShortcutItem
           v-for="item in items"
           :hotkey="item"
-          :key-focus="keyFocus"
           @mouseenter="$emit('itemHovered', item)"
           @mouseleave="$emit('itemLeft', item)"
           @click="$emit('itemClicked', item)"

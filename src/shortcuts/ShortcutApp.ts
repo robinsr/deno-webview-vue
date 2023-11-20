@@ -54,9 +54,9 @@ import sublimeText from './apps/sublime.hotkeys.ts';
 import testApp from './apps/test-app.shortcuts.ts';
 
 const apps = {
+  'testApp': new ShortcutApp(testApp),
   'github_desktop': new ShortcutApp(ghDesktop),
   'sublime': new ShortcutApp(sublimeText),
-  'testApp': new ShortcutApp(testApp),
 }
 
 export default apps;

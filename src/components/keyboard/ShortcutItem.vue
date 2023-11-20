@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { HotKey } from '../../shortcuts/ShortcutApp.ts';
-import { useFocusMatches } from './useKeyFocus.ts';
+import { useFocusIncludesOne, useFocusMatches } from './useKeyFocus.ts';
 
 import KBD from './KBD.vue';
 
@@ -9,12 +9,13 @@ const props = defineProps<{
 }>();
 
 const keyIds = new Set(props.hotkey.symbols.map(k => k.id));
-const $isActive = useFocusMatches(keyIds);
+const $isActive = useFocusMatches(keyIds)
+const $isIncluded = useFocusIncludesOne(keyIds);
 
 </script>
 
 <template>
-  <li class="shortcut-item" :class="[{ 'highlight': $isActive }]">
+  <li class="shortcut-item" :class="[{ 'highlight': $isActive || $isIncluded }]">
     <span class="shortcut-item-label">{{ hotkey.label }}</span>
     <KBD :symbols="hotkey.symbols" />
   </li>
