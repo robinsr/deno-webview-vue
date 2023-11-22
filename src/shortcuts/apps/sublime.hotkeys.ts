@@ -7,7 +7,7 @@ const SublimeHotkeys: ShortcutGroup = {
       name: "default",
       items: [
         { keys: "⌘ X", label: "Cut line" },
-        { keys: "⌘ ↩", label: "Insert line after" },
+        { keys: "⌘ ↵", label: "Insert line after" },
         { keys: "⌘ ⇧ ↩", label: "Insert line before" },
         { keys: "⌘ ⌃ ↑", label: "Move line/selection up" },
         { keys: "⌘ ⌃ ↓", label: "Move line/selection down" },

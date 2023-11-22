@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import LeftDrawer from "./LeftDrawer.vue";
-import UIIcon from './layout/UIIcon.vue';
+import UIIcon from './components/UIIcon.vue';
 
 type MenuItem = {
   label: string;

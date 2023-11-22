@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import UICard from "../layout/UICard.vue";
+import UICard from "../ui/components/UICard.vue";
 
 const props = defineProps<{
   apps: object[]

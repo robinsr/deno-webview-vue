@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Ear } from 'lucide-vue-next';
-import DebugProp from '../DebugProp.vue';
+import DebugProp from '../old/DebugProp.vue';
 import { KeySym } from '@keys/keyboard-key.ts';
 
 

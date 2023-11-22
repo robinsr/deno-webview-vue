@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MenuBar from './components/MenuBar.vue';
+import MenuBar from './components/ui/MenuBar.vue';
 import AppsProvider from './providers/AppsProvider.vue';
 </script>
 

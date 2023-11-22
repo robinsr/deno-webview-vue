@@ -30,9 +30,13 @@ const profile = 'default';
 const $keyId = ref(`${profile}-r${props.rowNum}b${props.buttonNum}`);
 const $isActive = useFocusIncludesAll(new Set([id]));
 
-
-const handleClick = () => {
-  emit('keyClicked', { button: props.symbol.id });
+const $showInfo = ref(false);
+const handleClick = (e: PointerEvent) => {
+  if (e.shiftKey) {
+    $showInfo.value = !$showInfo.value;
+  } else {
+    emit('keyClicked', { button: props.symbol.id });
+  }
 }
 
 const $gridStyles = () => {
@@ -46,7 +50,7 @@ const $gridStyles = () => {
 
 <template>
   <div ref="el"
-      @click="handleClick"
+      @click.prevent.stop="handleClick"
       :data-skbtn="$id"
       :data-skbtnuid="$keyId"
       :class="[
@@ -58,6 +62,7 @@ const $gridStyles = () => {
       ]"
        :style="$gridStyles()">
     <span>{{ $cap }}</span>
+    <KeyInfo :sym="props.symbol" :show="$showInfo" :context="el"></KeyInfo>
   </div>
 </template>
 
@@ -70,8 +75,8 @@ const $gridStyles = () => {
 
   margin: 0;
   padding: 0;
-  border-bottom: 3px solid var(--key-border-color);
-  border-radius: calc(0.4vb);
+  border-bottom: 1/70% solid var(--key-border-color);
+  border-radius: calc(0.4cqw);
 
   text-wrap: nowrap;
   font-size: 0.85cqw;
@@ -80,7 +85,7 @@ const $gridStyles = () => {
   transition: background-color 0.1s ease-out;
 
   -webkit-tap-highlight-color: rgba(0,0,0,0);
-  box-shadow: 0 0 3px -1px rgba(0,0,0,.3);
+  box-shadow: 0 0 3px -1px rgba(0,0,0,.3); /*, var(--key-border-color) 0 3px;*/
   box-sizing: border-box;
   cursor: pointer;
 

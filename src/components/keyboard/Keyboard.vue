@@ -19,7 +19,7 @@ const emit = defineEmits<{
 }>();
 
 const COL_GAP = 0;
-const GRID_GAP = 7;
+const GRID_GAP = 1;
 
 const gridContainer = () => {
   const { rows: rowConfig, cols: colConfig } = $currentKB.value.grid;
@@ -51,8 +51,8 @@ const gridContainer = () => {
     'display': 'grid',
     'grid-template-columns': colTemplate,
     'grid-template-rows': `repeat(${rowConfig}, 1fr)`,
-    'grid-row-gap': `${GRID_GAP}px`,
-    'grid-column-gap': `${GRID_GAP * 4}px`,
+    'grid-row-gap': `${GRID_GAP * 4}%`,
+    'grid-column-gap': `${GRID_GAP * 3}%`,
     'aspect-ratio': `${totalLength}/${gridHeight}`
   }
 }
@@ -68,7 +68,6 @@ const gridSection = (kb: SectionLayout) => {
     'grid-column-end': col + 1,
     'grid-row-start': row,
     'grid-row-end': row + kb.rows.length,
-    'grid-gap': `${GRID_GAP}px`
   }
 }
 
@@ -80,7 +79,8 @@ const sectionRows = (kb: SectionLayout) => {
     'height': '100%',
     'grid-template-columns': '100%',
     'grid-template-rows': `repeat(${rows.length}, 1fr)`,
-    'grid-gap': `${GRID_GAP}px`//'min(2%, 6px)'
+    // Space between keyboard rows
+    'grid-row-gap': `${GRID_GAP * 4}%`,
   }
 }
 
@@ -95,7 +95,7 @@ const sectionCols = (kb: SectionLayout, rowIndex: number) => {
   return {
     'display': 'grid',
     'grid-template-columns': columns,
-    'grid-gap': `${GRID_GAP}px`
+    'grid-gap': 0
   }
 }
 
@@ -145,7 +145,7 @@ const sectionClass = (kb: SectionLayout) => {
 </script>
 
 <template>
-    <main class="kb-container" :style="gridContainer()">
+    <div class="kb-container" :style="gridContainer()">
       <template v-for="$kb in $currentKB.sections">
         <div :class="sectionClass($kb)" :style="gridSection($kb)">
           <div class="hg-rows" :style="sectionRows($kb)">
@@ -160,23 +160,23 @@ const sectionClass = (kb: SectionLayout) => {
           </div>
         </div>
       </template>
-    </main>
+    </div>
 </template>
 
 <style module="colors">
-:global(:root)  {
+:global(:root) {
   --std-key-height: 100%;
   --sm-key-height: 75%;
-  --default-key-color: rgba(255, 255, 255, 1.0);
-  --mod-key-color: rgba(180, 180, 180, 1.0);
-  --std-key-hl-color: rgba(129, 86, 201, 1.0);
-  --mod-key1-hl-color: rgba(54, 187, 153, 1.0);
-  --mod-key2-hl-color: rgba(245, 159, 0, 1.0);
-  --mod-key3-hl-color: rgba(240, 62, 62, 1.0);
-  --key-text-color: rgba(0, 0, 0, 1.0);
-  --key-border-color: color-mix(in srgb, var(--default-key-color) 100%, var(--key-text-color) 50%);
-  --container-bg-color-dark: rgba(0, 0, 0, 0.1);
-  --container-bg-color-light: rgb(255 255 255 / 69%);
+  --default-key-color: rgb(255 255 255);
+  --mod-key-color: rgb(180 180 180);
+  --std-key-hl-color: rgb(129 86 201);
+  --mod-key1-hl-color: rgb(54 187 153);
+  --mod-key2-hl-color: rgb(245 159 0);
+  --mod-key3-hl-color: rgb(240 62 62);
+  --key-text-color: rgb(0 0 0);
+  --key-border-color: color-mix(in srgb, var(--default-key-color) 100%, var(--key-text-color) 80%);
+  --container-bg-color-dark: rgb(10% 10% 10%);
+  --container-bg-color-light: rgb(80% 80% 80%);
   --kb-font: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
 }
 </style>
@@ -195,7 +195,7 @@ input {
   height: 100%;
   box-sizing: border-box;
   margin: 0 auto;
-  padding: 12px;
+  padding: 1%;
 
   border-radius: 5px;
 

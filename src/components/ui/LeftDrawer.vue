@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { routes } from '../router.ts';
+import { routes } from '../../router.ts';
+import ThemeSwitcher from './ThemeSwitcher.vue';
+import UICard from './components/UICard.vue';
+
 
 const dialogEl = ref();
 
@@ -23,6 +26,9 @@ const close = (e: PointerEvent) => {
           </x-button>
         </router-link>
         <router-view class="view left-sidebar" name="LeftSidebar"></router-view>
+        <UICard>
+          <ThemeSwitcher />
+        </UICard>
       </nav>
     </dialog>
   </x-button>

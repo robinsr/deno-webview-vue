@@ -8,8 +8,8 @@ import { FocusState, KeyPress } from './types.ts'
 
 import Keyboard  from './Keyboard.vue';
 import KeyDebug from './KeyDebug.vue';
-import UICard from '../layout/UICard.vue';
-import UIColumns from '../layout/UIColumns.vue';
+import UICard from '../ui/components/UICard.vue';
+import UIColumns from '../ui/components/UIColumns.vue';
 import ListCard from './ListCard.vue';
 
 const apps = inject(injectApps, {});
@@ -84,6 +84,7 @@ const onShortcutClick = (clicked: HotKey) => {
 }
 
 const onKeyPress = ({ button, ...props }: KeyPress) => {
+  console.log(`SimpleKeyboard#onKeyPress`, button, props);
   $inspect.value = { button, ...props };
 
   switch ($focusState.value.focus) {

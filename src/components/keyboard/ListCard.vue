@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { HotKey } from '../../shortcuts/ShortcutApp.ts';
 
-import UICard from '../layout/UICard.vue';
+import UICard from '../ui/components/UICard.vue';
 import ShortcutItem from './ShortcutItem.vue';
 
 withDefaults(defineProps<{

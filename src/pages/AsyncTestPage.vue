@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Fetch from "../components/Fetch.vue";
+import Fetch from "../components/old/Fetch.vue";
 </script>
 
 <template>
