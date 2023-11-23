@@ -1,15 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { Ear } from 'lucide-vue-next';
 import DebugProp from '../old/DebugProp.vue';
 import { KeySym } from '@keys/keyboard-key.ts';
-
+import { useStore } from '@/store/app-store.ts';
 
 defineProps<{
   inspect?: object | undefined;
   keys?: KeySym[] | undefined;
   clicked?: object | undefined;
-}>()
+}>();
+
+const store = useStore();
+
+const $debug = computed(() => store.debug);
+
+
 
 const $$keyRef = ref(null);
 const $capture = ref<boolean>(false);
@@ -33,7 +39,7 @@ const stopCapture = () => {
 </script>
 
 <template>
-  <section>
+  <section v-if="$debug">
     <section>
       <x-card>
         <main>
@@ -44,7 +50,7 @@ const stopCapture = () => {
         </main>
       </x-card>
     </section>
-    <section v-if="inspect">
+    <section v-if="$debug && inspect">
       <x-card>
         <main>
           <x-label>Inspect:</x-label>
@@ -52,7 +58,7 @@ const stopCapture = () => {
         </main>
       </x-card>
     </section>
-    <section>
+    <section v-if="$debug">
       <x-card>
         <main>
           <x-label>Capture Key Events</x-label>

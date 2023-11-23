@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import { ref, inject, useCssModule } from 'vue';
+import { ref, useCssModule } from 'vue';
 import "simple-keyboard/build/css/index.css";
 import Keyboards from '@keys/keyboard-config.ts';
 import type { KeySym, KeyboardSpec, SectionLayout, KeyboardRow } from '@keys/key-types.ts'
 import KeyboardKey from './KeyboardKey.vue';
-import type { KeyPress } from './types.ts';
 import { styleMap } from './style-map.ts';
 
+// todo - still needed?
 useCssModule('colors');
-
-const $app = inject('app-id');
 
 const $currentKB = ref<KeyboardSpec>(Keyboards['apple_MB110LL']);
 
 const props = withDefaults(defineProps<{}>(), {});
 
 const emit = defineEmits<{
-  (e: 'onKeyPress', key: KeyPress): void;
+  (e: 'onKeyPress', key: { button: string; }): void;
 }>();
 
 const COL_GAP = 0;

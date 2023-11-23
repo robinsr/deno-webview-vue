@@ -9,8 +9,10 @@
   },
   "compilerOptions": {
     "allowImportingTsExtensions": true,
+    "lib": [ "deno.ns", "dom" ],
     "types": [
-      "https://esm.sh/@types/core-js/index.d.ts"
+      "https://esm.sh/@types/core-js/index.d.ts",
+      "./node_modules/vue/dist/vue.d.ts"
     ],
     "paths": {
       "@keys/*": [

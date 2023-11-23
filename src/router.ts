@@ -22,6 +22,12 @@ export const routes: AppRoute[] = [
   },
   {
     icon: 'code',
+    label: 'Dexie Test',
+    path: '/test/dexie',
+    component: () => import('@/pages/DexieTestPage.vue'),
+  },
+  {
+    icon: 'code',
     label: 'Async Test',
     path: '/test/async',
     component: () => import('@/pages/AsyncTestPage.vue'),

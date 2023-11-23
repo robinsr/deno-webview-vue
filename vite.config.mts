@@ -1,17 +1,19 @@
-import { defineConfig } from 'npm:vite@^4.4.11';
-import { fileURLToPath } from 'https://deno.land/std@0.177.1/node/url.ts';
+import vite, { defineConfig } from 'npm:vite@^4.4.11';
 import { default as vuePlugin } from 'npm:@vitejs/plugin-vue@^4.4.0';
+import  { importAssertionsPlugin }  from 'npm:rollup-plugin-import-assert@3.0.1';
+
 import 'npm:vue@^3.3.4';
 import 'npm:vue-router@4';
 import 'npm:simple-keyboard@3.7.26';
-import 'npm:simple-keyboard-layouts@3.3.34';
 import 'npm:lucide-vue-next@0.292.0';
 import '@utils/num.ts';
 import '@utils/text.ts';
 import '@keys/symbol.ts';
 import 'lodash';
-import * as corejs from "corejs"
+import "corejs"
 import 'nanoid';
+import 'npm:lokijs@1.5.12';
+import 'npm:pinia@2.1.7';
 
 type ImportMap = {
   imports: {
@@ -25,7 +27,11 @@ type ImportMap = {
 const decoder = new TextDecoder('utf-8');
 const importMap = JSON.parse(decoder.decode(Deno.readFileSync('./import_map.json'))) as ImportMap;
 
-console.log(importMap);
+let viteAliases = Object.entries(importMap.imports)
+  .filter(([k, v]) => !v.startsWith('npm'))
+  .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
+
+console.log(viteAliases);
 
 const vueStuff = {
   template: {
@@ -41,19 +47,19 @@ const vueStuff = {
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    //importMaps([json]),
-    vuePlugin(vueStuff)
+    //importAssertionsPlugin(),
+    vuePlugin(vueStuff),
   ],
   resolve: {
-    alias: importMap.imports,
+    alias: viteAliases,
   },
   server: {
     headers: {
       'Server-Name': 'Vite-Server',
       'Server-Cwd': Deno.cwd()
     },
-    proxy: {
-      '/api': 'http://localhost:5183'
-    }
+    // proxy: {
+    //   '/api': 'http://localhost:5183'
+    // }
   }
 });

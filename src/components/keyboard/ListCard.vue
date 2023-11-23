@@ -26,9 +26,7 @@ const emit = defineEmits<{
           v-for="item in items"
           :hotkey="item"
           @mouseenter="$emit('itemHovered', item)"
-          @mouseleave="$emit('itemLeft', item)"
-          @click="$emit('itemClicked', item)"
-      />
+          @mouseleave="$emit('itemLeft', item)"/>
     </ul>
   </UICard>
 </template>

@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { ref, unref } from 'vue';
+import { computed, ref, unref } from 'vue';
 import { KeySym } from '@keys/key-types.ts';
-import { KeyPress } from './types.ts';
-import { useFocusIncludesAll } from './useKeyFocus.ts';
-
+import { useStore } from '@/store/app-store.ts';
 import KeyInfo from './KeyInfo.vue';
 
+const store = useStore();
 
 const emit = defineEmits<{
-  (e: 'keyClicked', item: KeyPress): void;
+  (e: 'keyClicked', item: { button: string; }): void;
 }>();
 
 const props = defineProps<{
@@ -27,15 +26,24 @@ const $name = ref(name);
 const $cap = ref(legend.cap);
 
 const profile = 'default';
-const $keyId = ref(`${profile}-r${props.rowNum}b${props.buttonNum}`);
-const $isActive = useFocusIncludesAll(new Set([id]));
+const $dataKeyId = ref(`${profile}-r${props.rowNum}b${props.buttonNum}`);
+
+const $isActive = computed(() => {
+  return store.keyIds.includes(id);
+});
 
 const $showInfo = ref(false);
+
+
 const handleClick = (e: PointerEvent) => {
   if (e.shiftKey) {
     $showInfo.value = !$showInfo.value;
   } else {
-    emit('keyClicked', { button: props.symbol.id });
+    if (store.focus === 'key' && store.keyIds[0] === props.symbol.id) {
+      store.setFocus('none');
+    } else {
+      store.setFocus('key', props.symbol);
+    }
   }
 }
 
@@ -52,7 +60,7 @@ const btnClass = [
   <div ref="el"
       @click.prevent.stop="handleClick"
       :data-skbtn="$id"
-      :data-skbtnuid="$keyId"
+      :data-skbtnuid="$dataKeyId"
       :class="[ btnClass, { 'highlight-btn': $isActive } ]">
     <span>{{ $cap }}</span>
     <KeyInfo :sym="props.symbol" :show="$showInfo" :context="el"></KeyInfo>

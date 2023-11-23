@@ -10,10 +10,6 @@ const props = withDefaults(defineProps<{
 
 const isObj = (obj: unknown) => typeof obj === "object";
 
-if (props.log) {
-  console.log(props.obj);
-}
-
 </script>
 
 <template>

@@ -5,12 +5,12 @@ defineProps<{
 }>()
 
 defineEmits<{
-  (e: 'toggled'): void;
+  (e: 'onToggle'): void;
 }>();
 </script>
 
 <template>
-  <x-switch :toggled="val" @click.stop="$emit('toggled')">
+  <x-switch :toggled="val" @click.stop="$emit('onToggle')">
     <x-label>{{ label }}</x-label>
   </x-switch>
 </template>

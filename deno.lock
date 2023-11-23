@@ -5,8 +5,11 @@
       "npm:@vitejs/plugin-vue@^4.4.0": "npm:@vitejs/plugin-vue@4.4.0_vite@4.5.0_vue@3.3.8",
       "npm:core-js": "npm:core-js@3.33.0",
       "npm:lodash-es@4.17.21": "npm:lodash-es@4.17.21",
+      "npm:lokijs@1.5.12": "npm:lokijs@1.5.12",
       "npm:lucide-vue-next@0.292.0": "npm:lucide-vue-next@0.292.0_vue@3.3.8",
+      "npm:pinia@2.1.7": "npm:pinia@2.1.7_vue@3.3.8",
       "npm:postcss-each@1.1.0": "npm:postcss-each@1.1.0_postcss@8.4.31",
+      "npm:rollup-plugin-import-assert@3.0.1": "npm:rollup-plugin-import-assert@3.0.1_acorn-import-assertions@1.9.0__acorn@8.10.0_rollup@3.29.4",
       "npm:set.prototype.difference": "npm:set.prototype.difference@1.1.0",
       "npm:simple-keyboard-layouts@3.3.34": "npm:simple-keyboard-layouts@3.3.34",
       "npm:simple-keyboard@3.7": "npm:simple-keyboard@3.7.26",
@@ -210,6 +213,16 @@
       },
       "@vue/shared@3.3.8": {
         "integrity": "sha512-8PGwybFwM4x8pcfgqEQFy70NaQxASvOC5DJwLQfpArw1UDfUXrJkdxD3BhVTMS+0Lef/TU7YO0Jvr0jJY8T+mw==",
+        "dependencies": {}
+      },
+      "acorn-import-assertions@1.9.0_acorn@8.10.0": {
+        "integrity": "sha512-cmMwop9x+8KFhxvKrKfPYmN6/pKTYYHBqLa0DfvVZcKMJWNyWLnaqND7dx/qn66R7ewM1UX5XMaDVP5wlVTaVA==",
+        "dependencies": {
+          "acorn": "acorn@8.10.0"
+        }
+      },
+      "acorn@8.10.0": {
+        "integrity": "sha512-F0SAmZ8iUtS//m8DmCTA0jlh6TDKkHQyK6xc6V4KDTyZKA9dnvX9/3sRTVQrWm79glUAZbnmmNcdYwUIHWVybw==",
         "dependencies": {}
       },
       "anymatch@3.1.3": {
@@ -874,6 +887,10 @@
         "integrity": "sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==",
         "dependencies": {}
       },
+      "lokijs@1.5.12": {
+        "integrity": "sha512-Q5ALD6JiS6xAUWCwX3taQmgwxyveCtIIuL08+ml0nHwT3k0S/GIFJN+Hd38b1qYIMaE5X++iqsqWVksz7SYW+Q==",
+        "dependencies": {}
+      },
       "lucide-vue-next@0.292.0_vue@3.3.8": {
         "integrity": "sha512-tVnEPLJvB9n+REfJsgJsG/zxGM0yamFs6WkOjuAvMG1ZlMS27soiKekuWk/+G2uLF4jqhEegQHVmcAJBlnJpeg==",
         "dependencies": {
@@ -978,6 +995,14 @@
         "integrity": "sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==",
         "dependencies": {}
       },
+      "pinia@2.1.7_vue@3.3.8": {
+        "integrity": "sha512-+C2AHFtcFqjPih0zpYuvof37SFxMQ7OEG2zV9jRI12i9BOy3YQVAHwdKtyyc8pDcDyIc33WCIsZaCFWU7WWxGQ==",
+        "dependencies": {
+          "@vue/devtools-api": "@vue/devtools-api@6.5.1",
+          "vue": "vue@3.3.8",
+          "vue-demi": "vue-demi@0.14.6_vue@3.3.8"
+        }
+      },
       "postcss-each@1.1.0_postcss@8.4.31": {
         "integrity": "sha512-YfTPHHAPFVRgEJfLg9RM4R9WYEHVU9Rf1R8QgZfnObwV2dgNqzTLzTl0w5tF71ApFcYLiJAXiTpHAoqJFYcZVw==",
         "dependencies": {
@@ -1023,6 +1048,14 @@
           "is-core-module": "is-core-module@2.13.1",
           "path-parse": "path-parse@1.0.7",
           "supports-preserve-symlinks-flag": "supports-preserve-symlinks-flag@1.0.0"
+        }
+      },
+      "rollup-plugin-import-assert@3.0.1_acorn-import-assertions@1.9.0__acorn@8.10.0_rollup@3.29.4": {
+        "integrity": "sha512-7WynDI8B3F/ahhOEus1sDjKCPN3sV5ciV4t717kYlJOst59wJ76e3ig05mQJZZhc8AWpo4V0QMT7mrJpWShh0A==",
+        "dependencies": {
+          "acorn-import-assertions": "acorn-import-assertions@1.9.0_acorn@8.10.0",
+          "rollup": "rollup@3.29.4",
+          "string-to-template-literal": "string-to-template-literal@2.0.0"
         }
       },
       "rollup@2.79.1": {
@@ -1136,6 +1169,10 @@
         "dependencies": {
           "internal-slot": "internal-slot@1.0.6"
         }
+      },
+      "string-to-template-literal@2.0.0": {
+        "integrity": "sha512-AbTUWHXMyoRlTFP9qe013dfGTFq1XbcBLUoLC7PcumbJewtUwNXCvnko5cH2gZkUFC7kD2Fwxiv4YIndkU0xHA==",
+        "dependencies": {}
       },
       "string.prototype.trim@1.2.8": {
         "integrity": "sha512-lfjY4HcixfQXOfaqCvcBuOIapyaroTXhbkfJN3gcB1OtyupngWK4sEET9Knd0cXd28kTUqu/kHoV4HKSJdnjiQ==",
@@ -1258,6 +1295,12 @@
           "fsevents": "fsevents@2.3.3",
           "postcss": "postcss@8.4.31",
           "rollup": "rollup@3.29.4"
+        }
+      },
+      "vue-demi@0.14.6_vue@3.3.8": {
+        "integrity": "sha512-8QA7wrYSHKaYgUxDA5ZC24w+eHm3sYCbp0EzcDwKqN3p6HqtTCGR/GVsPyZW92unff4UlcSh++lmqDWN3ZIq4w==",
+        "dependencies": {
+          "vue": "vue@3.3.8"
         }
       },
       "vue-router@4.2.5_vue@3.3.8": {
@@ -1714,6 +1757,16 @@
     "https://deno.land/x/vite_plugin_deno_resolve@0.5.0/src/types.ts": "4fa625cdb931addcc072d3ad786c39df1c4403cdccff3aeebbc515e4e95ef304",
     "https://deno.land/x/vite_plugin_deno_resolve@0.5.0/src/url-resolve.ts": "33e7cff3506cb30c06f211c38ae3b5cd16d13c6268267b1593d7b000ccbb57c1",
     "https://esm.sh/core-js@3.33.2": "7e782041d929ccf2a55b2d1632a5bb2f6c703f48cc0ed0e8e7d6793871878d07",
+    "https://esm.sh/stable/@vue/reactivity@3.3.4/denonext/reactivity.mjs": "99dcaed2e52b34fc4f77f3e9a44a539935306ec3f4597e0737b7ed1be7901183",
+    "https://esm.sh/stable/@vue/runtime-core@3.3.4/denonext/runtime-core.mjs": "177d7094761f4b6075066e31b8db3e46cc84b19fe5ec5b707687902867d16bea",
+    "https://esm.sh/stable/@vue/runtime-dom@3.3.4/denonext/runtime-dom.mjs": "d5363c33be52f82869278ffd41242a8cac721d6c389e0b6bd4f6d55397844895",
+    "https://esm.sh/stable/@vue/shared@3.3.4/denonext/shared.mjs": "d14bdf0b011d5d8255893e8b51b65af1269d73b918cbeef8d02da127787ad2f2",
+    "https://esm.sh/stable/vue@3.3.4/denonext/vue.mjs": "a51b115fe7b4521e2e66703e9c199d27ec4988247b0ac97bca2763ea3d4cacf6",
+    "https://esm.sh/v133/@vueuse/core@10.6.1": "fc949b8d3af81574d8c7aeb5533c7cd6b20b706704bea4501464959af7794864",
+    "https://esm.sh/v133/@vueuse/core@10.6.1/denonext/core.mjs": "d84989978b3f4645ccc4ecaa2d06036455e3f9869f358e57e9b8cc8790e34e2e",
+    "https://esm.sh/v133/@vueuse/rxjs@10.6.1": "0603598df27dacb001d18abd3746e61555ad8f8757529d236a108fe637032fe0",
+    "https://esm.sh/v133/@vueuse/rxjs@10.6.1/denonext/rxjs.mjs": "c02ac9487b1cc859488f4464d6c33ea146a72077459893c864d123e4e60d38e6",
+    "https://esm.sh/v133/@vueuse/shared@10.6.1/denonext/shared.mjs": "4beb27bf3d9afad60492ffeb64b1d71291e2bd0a6fe27f9102e4747817436831",
     "https://esm.sh/v133/core-js@3.33.0": "befa963010ce1371f29df4b40b4b6ba21088eb0eaf130b8dea181fa84da2bfbc",
     "https://esm.sh/v133/core-js@3.33.0/denonext/core-js.mjs": "698be261d7f01352f8ae345994168bcc0c9b97bceca4a6874b80b06d3805da8a",
     "https://esm.sh/v133/core-js@3.33.2": "7e782041d929ccf2a55b2d1632a5bb2f6c703f48cc0ed0e8e7d6793871878d07",
@@ -1722,9 +1775,15 @@
     "https://esm.sh/v133/core-js@3.33.2/denonext/core-js.mjs": "004f703c4fb1bf9d44d7177602556547bc2599ad9098c95ed56984bbd7ec0265",
     "https://esm.sh/v133/core-js@3.33.2/es2022/actual.mjs": "5d5cd5a9782211de218b912d76c58efcabf6dce5c1eb3bd3797756b6646b58d7",
     "https://esm.sh/v133/core-js@3.33.2/es2022/core-js.mjs": "645f993dc80bffc2039bb755dccb248e76f31e85c2cd5525037f630eeff1993b",
+    "https://esm.sh/v133/dexie@3.2.4": "a9085ffbe13ecc51562d9c293ada3ba4dc0cc6f6a0763fd07b987a646f9c5c92",
+    "https://esm.sh/v133/dexie@3.2.4/denonext/dexie.mjs": "f685622969b950b64d250903851542a2152e831c05c260c708adb344a973f591",
     "https://esm.sh/v133/lodash-es@4.17.21/es2022/lodash-es.mjs": "878cacf66e18225f66ee708db3176b95deb5c480cf6f9a281da8ef1946c10260",
     "https://esm.sh/v133/nanoid@5.0.2": "a330e34d5b54e55d8ec2096d9f0065518cd00a70c6694e63f6f0b752dc4ff3de",
     "https://esm.sh/v133/nanoid@5.0.2/denonext/nanoid.mjs": "92b843153a4edb2fbeb544f84161d5b2e1c299ee7cd7261a2cf6336e0b8d4649",
-    "https://esm.sh/v133/nanoid@5.0.2/es2022/nanoid.mjs": "3cb04d557c53bb6ae09d00ba9fe77ef7f852054f7fe154fcb9cf61f667853fbb"
+    "https://esm.sh/v133/nanoid@5.0.2/es2022/nanoid.mjs": "3cb04d557c53bb6ae09d00ba9fe77ef7f852054f7fe154fcb9cf61f667853fbb",
+    "https://esm.sh/v133/rxjs@7.8.1": "23c5d303beffd71cdcd985cd1efbc90111d71913e2e46b7520a833085cd673ff",
+    "https://esm.sh/v133/rxjs@7.8.1/denonext/rxjs.mjs": "b303301257376ac1fec74181ae47e49319b745ac975381165cc3074f45bb6caf",
+    "https://esm.sh/v133/tslib@2.6.2/denonext/tslib.mjs": "29782bcd3139f77ec063dc5a9385c0fff4a8d0a23b6765c73d9edeb169a04bf1",
+    "https://esm.sh/v133/vue-demi@0.14.6/denonext/vue-demi.mjs": "9ee5fa5955ed6041e1ca106f0378312494316beb6466648bbe20046b30c0ad38"
   }
 }

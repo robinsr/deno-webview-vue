@@ -21,6 +21,7 @@ const TestApp: ShortcutGroup = {
     items: [
       { label: 'Func k', keys: 'fn k' },
       { label: 'F1-key', keys: 'f1' },
+      { label: 'Shift the F1-key', keys: '⇧ f1' },
       { label: 'F2-key - cap', keys: 'F2' },
       { label: 'Shift f4', keys: '⇧ f4' },
       { label: 'Shift f5 - alt', keys: 'shift+f5'},

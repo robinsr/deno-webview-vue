@@ -30,7 +30,7 @@ export type HotKeyGroup = {
 }
 
 
-class ShortcutApp implements HotKeyGroup {
+export class ShortcutApp implements HotKeyGroup {
   name: string;
   groupNames: string[];
   groupings: HotKeyGroup['groupings']
