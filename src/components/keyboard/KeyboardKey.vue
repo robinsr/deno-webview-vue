@@ -6,6 +6,7 @@ import { useFocusIncludesAll } from './useKeyFocus.ts';
 
 import KeyInfo from './KeyInfo.vue';
 
+
 const emit = defineEmits<{
   (e: 'keyClicked', item: KeyPress): void;
 }>();
@@ -24,7 +25,6 @@ const { id, name, legend, width, height, offset } = unref(props.symbol);
 const $id = ref(id);
 const $name = ref(name);
 const $cap = ref(legend.cap);
-const $width = ref(width);
 
 const profile = 'default';
 const $keyId = ref(`${profile}-r${props.rowNum}b${props.buttonNum}`);
@@ -39,13 +39,13 @@ const handleClick = (e: PointerEvent) => {
   }
 }
 
-const $gridStyles = () => {
-  const start = (props.gridLeft || 0) + 1 + offset;
-  return {
-    'grid-column': `${start} / span ${width}`,
-    'height': `${height * 100}%`,
-  }
-}
+const btnClass = [
+  'ex-hg-button',
+  'hg-functionBtn',
+  'btn-id-' + $id,
+  'btn-name-' + name,
+]
+
 </script>
 
 <template>
@@ -53,14 +53,7 @@ const $gridStyles = () => {
       @click.prevent.stop="handleClick"
       :data-skbtn="$id"
       :data-skbtnuid="$keyId"
-      :class="[
-          'ex-hg-button',
-          'hg-functionBtn',
-          'btn-id-' + $id,
-          'btn-name-' + name,
-          { 'highlight-btn': $isActive }
-      ]"
-       :style="$gridStyles()">
+      :class="[ btnClass, { 'highlight-btn': $isActive } ]">
     <span>{{ $cap }}</span>
     <KeyInfo :sym="props.symbol" :show="$showInfo" :context="el"></KeyInfo>
   </div>

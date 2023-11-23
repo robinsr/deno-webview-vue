@@ -5,6 +5,7 @@ import Keyboards from '@keys/keyboard-config.ts';
 import type { KeySym, KeyboardSpec, SectionLayout, KeyboardRow } from '@keys/key-types.ts'
 import KeyboardKey from './KeyboardKey.vue';
 import type { KeyPress } from './types.ts';
+import { styleMap } from './style-map.ts';
 
 useCssModule('colors');
 
@@ -20,6 +21,7 @@ const emit = defineEmits<{
 
 const COL_GAP = 0;
 const GRID_GAP = 1;
+const KEY_GAP = GRID_GAP * 0.3;
 
 const gridContainer = () => {
   const { rows: rowConfig, cols: colConfig } = $currentKB.value.grid;
@@ -37,8 +39,6 @@ const gridContainer = () => {
         return acc;
       }, emptyArr);
 
-  console.log(joinedCols);
-
   const colLengths = joinedCols.map(rows => longestRow(rows))
   const totalLength = colLengths.reduce((t, x) => t + x, 0);
   const gridHeight = tallest(rows);
@@ -47,56 +47,60 @@ const gridContainer = () => {
       .map(l => `${Math.floor((l*100) / totalLength)}fr`)
       .join(' ');
 
-  return {
+  return styleMap('gridContainer').all({
     'display': 'grid',
     'grid-template-columns': colTemplate,
     'grid-template-rows': `repeat(${rowConfig}, 1fr)`,
     'grid-row-gap': `${GRID_GAP * 4}%`,
     'grid-column-gap': `${GRID_GAP * 3}%`,
     'aspect-ratio': `${totalLength}/${gridHeight}`
-  }
+  }).get();
 }
 
 const gridSection = (kb: SectionLayout) => {
-  const grid = $currentKB.value.grid?.rows || 6;
+  const { row, col } = kb.position;
 
-  const { row, col } = kb.position || { row: 1, col: 1 };
+  const styles = styleMap('gridSection');
 
-  return {
+  if (!kb.grid) {
+    styles.add('display', 'grid');
+  }
+
+  styles.all({
     'aspect-ratio': `${longestRow(kb.rows)}/${heightMax(kb.rows)}`,
     'grid-column-start': col,
     'grid-column-end': col + 1,
     'grid-row-start': row,
     'grid-row-end': row + kb.rows.length,
-  }
+    'grid-row-gap': `${KEY_GAP}cqh`,
+    'grid-column-gap': `${KEY_GAP}cqw`,
+  })
+
+  return styles.get();
 }
 
-const sectionRows = (kb: SectionLayout) => {
-  const rows = kb.rows;
+const sectionRows = (kb: SectionLayout, rowI: number) => {
+  const { grid, rows } = kb;
 
-  return {
-    'display': 'grid',
-    'height': '100%',
-    'grid-template-columns': '100%',
-    'grid-template-rows': `repeat(${rows.length}, 1fr)`,
-    // Space between keyboard rows
-    'grid-row-gap': `${GRID_GAP * 4}%`,
-  }
-}
+  const styles = styleMap('sectionRows')
+      .add('display', 'grid');
 
-const sectionCols = (kb: SectionLayout, rowIndex: number) => {
-  let columns;
-  if (kb.grid) {
-    columns = `repeat(${kb.grid.cols}, 1fr)`;
+  const exact = (num: number) => `repeat(${num}, minmax(0, 1fr))`
+
+  if (grid) {
+    styles.add('grid-template-rows', exact(grid.rows));
+    styles.add('grid-template-columns', exact(grid.cols));
   } else {
-    columns = `repeat(${rowTotal(kb.rows, rowIndex)}, 1fr)`;
+    styles.add('grid-template-rows', '1fr');
+    styles.add('grid-template-columns', `repeat(${rowTotal(rows, rowI)}fr)`);
+    styles.add('grid-column-gap', `${KEY_GAP}cqw`);
   }
 
-  return {
-    'display': 'grid',
-    'grid-template-columns': columns,
-    'grid-gap': 0
-  }
+  return styles.get();
+}
+
+const hasGrid = (kb: SectionLayout): boolean => {
+  return !!kb.grid;
 }
 
 // todo - determine programmatically
@@ -118,18 +122,45 @@ const longestRow = (rows: KeyboardRow[]): number => {
   return Math.max(...rows.map((_r, i) => rowTotal(rows, i)));
 }
 
-const keyOffset = (rows: KeyboardRow[], rowIndex: number, keyIndex: number, key: KeySym): number => {
+const keyOffset = (section: SectionLayout, rowIndex: number, keyIndex: number, key: KeySym): number => {
   if (!key || !key.id) {
     console.warn(`No key ${key}, row: ${rowIndex}`);
     return 0;
   }
 
-  if (rows.at(rowIndex)) {
-    let r = rows.at(rowIndex)!;
+  if (section.rows.at(rowIndex)) {
+    let r = section.rows.at(rowIndex)!;
     return r.slice(0, keyIndex).reduce((off, k) => off + k.width + (k.offset || 0) + COL_GAP, 0);
   }
 
   return 0;
+}
+
+const gridKey = (section: SectionLayout, rowIndex: number, keyIndex: number, key: KeySym) => {
+  const left = keyOffset(section, rowIndex, keyIndex, key);
+
+  const colStart = left + key.offset + 1;
+
+  const styles = styleMap('gridKey');
+
+  if (section.grid) {
+    styles.var('griddedKey', 1);
+    styles.add('grid-column', `${colStart} / span ${key.width}`);
+
+    if (key.height > 1) {
+      styles.add('grid-row', `span ${key.height}`);
+    }
+  } else {
+    styles.var('nonGriddedKey', 1);
+    styles.add('grid-column', `${colStart} / span ${key.width}`);
+    //styles.add('grid-row', '');
+  }
+
+  if (key.height < 1) {
+    styles.add('height', `${key.height * 100}%`);
+  }
+
+  return styles.get();
 }
 
 const sectionClass = (kb: SectionLayout) => {
@@ -145,22 +176,39 @@ const sectionClass = (kb: SectionLayout) => {
 </script>
 
 <template>
-    <div class="kb-container" :style="gridContainer()">
-      <template v-for="$kb in $currentKB.sections">
-        <div :class="sectionClass($kb)" :style="gridSection($kb)">
-          <div class="hg-rows" :style="sectionRows($kb)">
-            <div class="hg-row" v-for="($row, $rowNum) in $kb.rows" :style="sectionCols($kb, $rowNum)">
-                <KeyboardKey v-for="($key, $keyNum) in $row"
-                             @key-clicked="b => $emit('onKeyPress', b)"
-                             :grid-left="keyOffset($kb.rows, $rowNum, $keyNum, $key)"
-                             :symbol="$key"
-                             :row-num="$rowNum+1"
-                             :button-num="$keyNum+1"/>
-            </div>
+  <div class="kb-container" :style="gridContainer()">
+    <template v-for="$kbSection in $currentKB.sections">
+      <template v-if="hasGrid($kbSection)">
+        <div :class="[ ...sectionClass($kbSection), 'hg-row' ]"
+             :style="[ gridSection($kbSection), sectionRows($kbSection, 0) ]">
+          <template v-for="($row, $rowNum) in $kbSection.rows">
+            <KeyboardKey v-for="($key, $keyNum) in $row"
+                         @key-clicked="b => $emit('onKeyPress', b)"
+                         :style="gridKey($kbSection, $rowNum, $keyNum, $key)"
+                         :symbol="$key"
+                         :row-num="$rowNum+1"
+                         :button-num="$keyNum+1"/>
+          </template>
+        </div>
+      </template>
+      <template v-else>
+        <div :class="sectionClass($kbSection)"
+             :style="gridSection($kbSection)">
+          <div v-for="($row, $rowNum) in $kbSection.rows"
+               :class="[ 'hg-row' ]"
+               :style="sectionRows($kbSection, $rowNum)">
+            <KeyboardKey v-for="($key, $keyNum) in $row"
+                         @key-clicked="b => $emit('onKeyPress', b)"
+                         :style="gridKey($kbSection, $rowNum, $keyNum, $key)"
+                         :grid-left="keyOffset($kbSection, $rowNum, $keyNum, $key)"
+                         :symbol="$key"
+                         :row-num="$rowNum+1"
+                         :button-num="$keyNum+1"/>
           </div>
         </div>
       </template>
-    </div>
+    </template>
+  </div>
 </template>
 
 <style module="colors">
