@@ -13,7 +13,7 @@ const close = (e: PointerEvent) => {
 </script>
 
 <template>
-  <x-button skin="flat">
+  <x-button skin="flat" id="left-drawer-btn">
     <x-label>
       <x-icon href="#menu"></x-icon>
     </x-label>
@@ -46,6 +46,10 @@ const close = (e: PointerEvent) => {
 </template>
 
 <style scoped>
+#left-drawer-btn {
+  min-width: 40px;
+}
+
 dialog#sidebar {
   width: 300px;
   height: 100vh;

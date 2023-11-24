@@ -57,11 +57,11 @@ const handleClick = () => {
   cursor: pointer;
 
   &:hover {
-    background-color: var(--fuchsia-blue);
+    background-color: color-mix(in srgb, var(--fuchsia-blue) 50%, var(--background-color));
   }
 
   &.highlight {
-    background-color: var(--fuchsia-blue);
+    background-color: color-mix(in srgb, var(--fuchsia-blue) 75%, var(--background-color));
   }
 }
 </style>

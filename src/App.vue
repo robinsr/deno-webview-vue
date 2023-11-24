@@ -72,18 +72,23 @@ onUnmounted(() => {
   </AppsProvider>
 </template>
 
-<style>
+<style scoped>
 #app-content {
   margin: 35px auto;
   padding: 0px 70px;
+}
+</style>
 
-  --catskill-white: rgba(237, 245, 247, 1.0);
-  --mine-shaft: rgba(39, 39, 39, 1.0);
-  --boulder: rgba(124, 124, 124, 1.0);
-  --scorpion: rgba(91, 91, 91, 1.0);
-  --fuchsia-blue: rgba(129, 86, 201, 1.0);
-  --keppel: rgba(54, 187, 153, 1.0);
-  --orange-peel: rgba(245, 159, 0, 1.0);
-  --flamingo: rgba(240, 62, 62, 1.0);
+<style module="colors">
+:global(:root) {
+  --catskill-white: rgb(237, 245, 247);
+  --mine-shaft: rgb(39, 39, 39);
+  --boulder: rgb(124, 124, 124);
+  --scorpion: rgb(91, 91, 91);
+  --fuchsia-blue: rgb(129, 86, 201);
+  --curious-blue: rgb(28, 126, 214);
+  --keppel: rgb(54, 187, 153);
+  --orange-peel: rgb(245, 159, 0);
+  --flamingo: rgb(240, 62, 62);
 }
 </style>

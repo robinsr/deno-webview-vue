@@ -212,40 +212,25 @@ const sectionClass = (kb: SectionLayout) => {
 :global(:root) {
   --std-key-height: 100%;
   --sm-key-height: 75%;
-  --mod-key-color: rgb(180 180 180);
-  --std-key-hl-color: rgb(129 86 201);
-  --mod-key1-hl-color: rgb(54 187 153);
-  --mod-key2-hl-color: rgb(245 159 0);
-  --mod-key3-hl-color: rgb(240 62 62);
-  --key-border-color: color-mix(in srgb, var(--kb-key-color) 100%, var(--key-text-color) 80%);
+  --mod-key-color: var(--boulder);
+  --std-key-hl-color: var(--fuchsia-blue);
+  --mod1-bg-color: var(--curious-blue);
+  --mod2-bg-color: var(--keppel);
+  --mod3-bg-color: var(--orange-peel);
+  --mod4-bg-color: var(--flamingo);
+  --key-border-color: color-mix(in srgb, var(--kb-bg-color) 100%, var(--kb-text-color) 80%);
   --kb-font: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
 }
 
-/*@media (prefers-color-scheme: light) {
-  :global(:root) {
-    --key-text-color: rgb(0 0 0);
-    --kb-key-color: rgb(255 255 255);
-    --kb-container-bg-color: rgb(80% 80% 80%);
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :global(:root) {
-    --key-text-color: rgb(90% 90% 90%);
-    --kb-key-color: rgb(10% 10% 10%);
-    --kb-container-bg-color: rgb(40% 40% 40%);
-  }
-}*/
-
 :global([color-scheme="light"]) {
-  --key-text-color: rgb(0 0 0);
-  --kb-key-color: rgb(255 255 255);
+  --kb-text-color: var(--mine-shaft);
+  --kb-bg-color: var(--catskill-white);
   --kb-container-bg-color: rgb(80% 80% 80%);
 }
 
 :global([color-scheme="dark"]) {
-  --key-text-color: rgb(90% 90% 90%);
-  --kb-key-color: rgb(10% 10% 10%);
+  --kb-text-color: var(--catskill-white);
+  --kb-bg-color: var(--mine-shaft);
   --kb-container-bg-color: rgb(40% 40% 40%);
 }
 </style>
@@ -268,7 +253,7 @@ input {
   border-radius: 5px;
 
   background-color: var(--kb-container-bg-color);
-  color: var(--key-text-color);
+  color: var(--kb-text-color);
 
   .kb-section.vue-shortcuts {
     display: inline-block;
