@@ -1,31 +1,22 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useStore } from '@/store/app-store.ts';
-import UICard from "../ui/components/UICard.vue";
+import { useDataStore } from '@/store/data-store.ts';
+import UICard from "@ui/UICard.vue";
 import UIColumns from '@ui/UIColumns.vue';
-import Switch from '../ui/components/UISwitch.vue';
+import Switch from '@ui/UISwitch.vue';
 
 const store = useStore();
-const $apps = computed(() => store.data.apps);
-const $selectedApp = computed(() => store.data.selectedApp);
 const $debug = computed(() => store.debug);
 
-const handleAppSelect = (e: PointerEvent) => {
-  store.setSelectedApp(e.target.value);
-}
-
-const clearSelected = () => {
-  store.setFocus('none');
-};
-
-const toggleDebug = () => {
-  store.debug = !$debug.value;
-}
+const data = useDataStore();
+const $apps = computed(() => data.apps);
+const $selectedApp = computed(() => data.selectedApp);
 
 </script>
 
 <template>
-  <UIColumns :count="3" class="shortcut-viewer-controls">
+  <div>
     <UICard title="Select Group">
       <x-label v-if="$selectedApp">Selected: {{ $selectedApp.name }}</x-label>
       <x-select :value="$selectedApp.name">
@@ -34,25 +25,25 @@ const toggleDebug = () => {
           <x-menuitem v-for="app in $apps"
                       :value="app.name"
                       :toggled="app.name === $selectedApp.name"
-                      @click="handleAppSelect">
+                      @click="() => data.setSelectedApp(app.name)">
             <x-label>{{app.name}}</x-label>
           </x-menuitem>
         </x-menu>
       </x-select>
     </UICard>
     <UICard>
-      <x-button @click="clearSelected">
+      <x-button @click="() => store.setFocus('none')">
         <x-label>Clear</x-label>
       </x-button>
     </UICard>
     <UICard>
-      <Switch label="Debug" :val="$debug" @on-toggle="toggleDebug"></Switch>
+      <Switch label="Debug"
+              :val="$debug"
+              @on-toggle="() => store.toggleDebug()" />
     </UICard>
-  </UIColumns>
+  </div>
 </template>
 
 <style scoped>
-.shortcut-viewer-controls {
-  margin-bottom: 15px;
-}
+
 </style>

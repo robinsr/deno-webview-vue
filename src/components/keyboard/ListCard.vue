@@ -15,7 +15,6 @@ withDefaults(defineProps<{
 const emit = defineEmits<{
   (e: 'itemHovered', item: HotKey): void;
   (e: 'itemLeft', item: HotKey): void;
-  (e: 'itemClicked', item: HotKey): void;
 }>();
 </script>
 
@@ -33,9 +32,6 @@ const emit = defineEmits<{
 
 <style scoped>
 .shortcut-group {
-  break-inside: avoid-column;
-  padding: 0;
-  margin: 0 10px 15px 10px;
 
   .shortcut-list > *:nth-child(odd) {
     backdrop-filter: brightness(80%);

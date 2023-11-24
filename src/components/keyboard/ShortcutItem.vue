@@ -1,32 +1,32 @@
 <script setup lang="ts">
-import { HotKey } from '../../shortcuts/ShortcutApp.ts';
-import { useStore } from '@/store/app-store.ts';
-import KBD from './KBD.vue';
 import { computed, unref } from 'vue';
+import { HotKey } from '../../shortcuts/ShortcutApp.ts';
+import { useViewStore } from '@/store/view-store.ts';
+import KBD from './KBD.vue';
 
-const store = useStore();
+const viewStore = useViewStore();
 
 const props = defineProps<{
   hotkey: HotKey;
 }>();
 
-const { symbols, id } = unref(props.hotkey);
+const { symbols, id } = unref<HotKey>(props.hotkey);
 
 const keyIds = Array.from(new Set(symbols.map(k => k.id)));
 
 const $hotkeyMatch = computed(() => {
-  return store.hotkey && store.hotkey.id === id;
+  return viewStore.hotkey && viewStore.hotkey.id === id;
 })
 
 const $singleMatch = computed(() => {
-  return !store.hotkey && keyIds.includes(store.keyIds[0] || '');
+  return !viewStore.hotkey && keyIds.includes(viewStore.keyIds[0] || '');
 });
 
 const handleClick = () => {
-  if (store.hotkey && store.hotkey.id === id) {
-    store.setFocus('none');
+  if (viewStore.hotkey && viewStore.hotkey.id === id) {
+    viewStore.setFocus('none');
   } else {
-    store.setFocus('hotkey', props.hotkey);
+    viewStore.setFocus('hotkey', props.hotkey);
   }
 }
 

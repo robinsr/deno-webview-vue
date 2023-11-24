@@ -10,9 +10,11 @@ defineEmits<{
 </script>
 
 <template>
-  <x-switch :toggled="val" @click.stop="$emit('onToggle')">
-    <x-label>{{ label }}</x-label>
-  </x-switch>
+  <x-box>
+    <x-switch :toggled="val" @click.stop="$emit('onToggle')">
+      <x-label>{{ label }}</x-label>
+    </x-switch>
+  </x-box>
 </template>
 
 <style scoped>

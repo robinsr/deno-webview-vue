@@ -4,6 +4,7 @@
     "specifiers": {
       "npm:@vitejs/plugin-vue@^4.4.0": "npm:@vitejs/plugin-vue@4.4.0_vite@4.5.0_vue@3.3.8",
       "npm:core-js": "npm:core-js@3.33.0",
+      "npm:hotkeys-js@3.12.0": "npm:hotkeys-js@3.12.0",
       "npm:lodash-es@4.17.21": "npm:lodash-es@4.17.21",
       "npm:lokijs@1.5.12": "npm:lokijs@1.5.12",
       "npm:lucide-vue-next@0.292.0": "npm:lucide-vue-next@0.292.0_vue@3.3.8",
@@ -696,6 +697,10 @@
         "dependencies": {
           "function-bind": "function-bind@1.1.2"
         }
+      },
+      "hotkeys-js@3.12.0": {
+        "integrity": "sha512-Z+N573ycUKIGwFYS3ID1RzMJiGmtWMGKMiaNLyJS8B1ei+MllF4ZYmKS2T0kMWBktOz+WZLVNikftEgnukOrXg==",
+        "dependencies": {}
       },
       "iconv-lite@0.6.3": {
         "integrity": "sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==",

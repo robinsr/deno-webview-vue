@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, unref } from 'vue';
 import { KeySym } from '@keys/key-types.ts';
-import { useStore } from '@/store/app-store.ts';
+import { useViewStore } from '@/store/view-store.ts';
+import { useDataStore } from '@/store/data-store.ts';
 import KeyInfo from './KeyInfo.vue';
-
-const store = useStore();
 
 const emit = defineEmits<{
   (e: 'keyClicked', item: { button: string; }): void;
@@ -18,6 +17,7 @@ const props = defineProps<{
 }>();
 
 const el = ref(null);
+const $showInfo = ref(false);
 
 const { id, name, legend, width, height, offset } = unref(props.symbol);
 
@@ -26,23 +26,21 @@ const $name = ref(name);
 const $cap = ref(legend.cap);
 
 const profile = 'default';
-const $dataKeyId = ref(`${profile}-r${props.rowNum}b${props.buttonNum}`);
+const $dataKeyId = `${profile}-r${props.rowNum}b${props.buttonNum}`;
 
-const $isActive = computed(() => {
-  return store.keyIds.includes(id);
-});
 
-const $showInfo = ref(false);
+const view = useViewStore();
+const $isActive = computed(() => view.keyIds.includes(id));
 
 
 const handleClick = (e: PointerEvent) => {
   if (e.shiftKey) {
     $showInfo.value = !$showInfo.value;
   } else {
-    if (store.focus === 'key' && store.keyIds[0] === props.symbol.id) {
-      store.setFocus('none');
+    if (view.focus === 'key' && view.keyIds[0] === props.symbol.id) {
+      view.setFocus('none');
     } else {
-      store.setFocus('key', props.symbol);
+      view.setFocus('key', props.symbol);
     }
   }
 }
@@ -76,51 +74,51 @@ const btnClass = [
 
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   border-bottom: 1/70% solid var(--key-border-color);
   border-radius: calc(0.4cqw);
 
   text-wrap: nowrap;
   font-size: 0.85cqw;
 
-  background-color: var(--default-key-color);
   transition: background-color 0.1s ease-out;
 
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   box-shadow: 0 0 3px -1px rgba(0,0,0,.3); /*, var(--key-border-color) 0 3px;*/
-  box-sizing: border-box;
   cursor: pointer;
+
+  background-color: var(--kb-key-color);
 
 
   &.btn-name-cmd,
   &.btn-name-shift,
   &.btn-name-ctrl,
   &.btn-name-alt {
-    background-color: var(--mod-key-color);
+    background-color: color-mix(in srgb, var(--mod-key-color) 50%, #000000 50%);
     border-bottom-color: color-mix(in srgb, var(--mod-key-color) 50%, #000000 75%);
   }
 
   &.highlight-btn {
-
-    background-color: color-mix(in srgb, var(--std-key-hl-color) 75%, var(--default-key-color));
+    background-color: color-mix(in srgb, var(--std-key-hl-color) 75%, var(--kb-key-color));
     border-bottom-color: color-mix(in srgb, var(--std-key-hl-color) 50%, #000000 50%);
 
     &.btn-name-cmd {
-      background-color: color-mix(in srgb, var(--mod-key1-hl-color) 75%, var(--default-key-color));
+      background-color: color-mix(in srgb, var(--mod-key1-hl-color) 75%, var(--kb-key-color));
       border-bottom-color: color-mix(in srgb, var(--mod-key1-hl-color) 50%, #000000 50%);
     }
 
     &.btn-name-shift {
-      background-color: color-mix(in srgb, var(--mod-key2-hl-color) 75%, var(--default-key-color));
+      background-color: color-mix(in srgb, var(--mod-key2-hl-color) 75%, var(--kb-key-color));
       border-bottom-color: color-mix(in srgb, var(--mod-key2-hl-color) 50%, #000000 50%);
     }
 
     &.btn-name-ctrl {
-      background-color: color-mix(in srgb, var(--mod-key3-hl-color) 75%, var(--default-key-color));
+      background-color: color-mix(in srgb, var(--mod-key3-hl-color) 75%, var(--kb-key-color));
       border-bottom-color: color-mix(in srgb, var(--mod-key3-hl-color) 50%, #000000 50%);
     }
 
     &.btn-name-alt {
-      background-color: color-mix(in srgb, var(--mod-key3-hl-color) 75%, var(--default-key-color));
+      background-color: color-mix(in srgb, var(--mod-key3-hl-color) 75%, var(--kb-key-color));
       border-bottom-color: color-mix(in srgb, var(--mod-key3-hl-color) 50%, #000000 50%);
     }
   }

@@ -4,8 +4,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-
-  --light-background-color: #363636;
+  color-scheme: light dark;
 }
 
 a {
@@ -36,23 +35,4 @@ main#app {
     position: relative;
     flex: 1 1 0%;
     overflow: auto;
-
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
-x-card > main {
-  box-sizing: border-box;
-  padding: 16px 20px;
 }

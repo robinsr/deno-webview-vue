@@ -17,18 +17,29 @@ const close = (e: PointerEvent) => {
     <x-label>
       <x-icon href="#menu"></x-icon>
     </x-label>
-    <dialog id="sidebar" ref="dialogEl" >
+    <dialog id="sidebar" ref="dialogEl">
       <nav>
-        <router-link v-for="route in routes" :to="route.path">
-          <x-button skin="nav" @click="close">
-            <x-icon :href="'#' + route.icon"></x-icon>
-            <x-label>{{ route.label }}</x-label>
-          </x-button>
-        </router-link>
-        <router-view class="view left-sidebar" name="LeftSidebar"></router-view>
-        <UICard>
-          <ThemeSwitcher />
-        </UICard>
+        <h1>deno-webview-vue</h1>
+        <x-box vertical>
+          <h2>Pages</h2>
+          <router-link v-for="route in routes" :to="route.path">
+            <x-button skin="nav" @click="close">
+              <x-icon :href="'#' + route.icon"></x-icon>
+              <x-label>{{ route.label }}</x-label>
+            </x-button>
+          </router-link>
+        </x-box>
+        <hr>
+        <x-box vertical>
+          <router-view name="LeftSidebar" />
+        </x-box>
+        <hr>
+        <x-box vertical>
+          <h2>Options</h2>
+          <UICard>
+            <ThemeSwitcher />
+          </UICard>
+        </x-box>
       </nav>
     </dialog>
   </x-button>
@@ -41,12 +52,24 @@ dialog#sidebar {
   left: 0;
   right: auto;
   border-radius: 0;
-}
 
-dialog#sidebar nav {
-  box-sizing: border-box;
-  padding: 0px 20px;
-  margin-bottom: 20px;
-  width: 100%;
+  & nav {
+    box-sizing: border-box;
+    padding: 0px 20px;
+    margin-bottom: 20px;
+    width: 100%;
+
+    & x-box {
+      padding: 0.4em 0;
+    }
+
+    & h1 {
+      font-size: 1.4em;
+    }
+
+    & h2 {
+      font-size: 1.2em;
+    }
+  }
 }
 </style>

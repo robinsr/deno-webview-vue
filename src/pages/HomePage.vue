@@ -3,12 +3,9 @@ import SimpleKeyboard from '../components/keyboard/SimpleKeyboard.vue';
 </script>
 
 <template>
-<main>
-  <h1>Main Page</h1>
-  <div>
+  <main>
     <SimpleKeyboard />
-  </div>
-</main>
+  </main>
 </template>
 
 <style scoped>

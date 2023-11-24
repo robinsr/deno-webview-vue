@@ -14,6 +14,7 @@ import "corejs"
 import 'nanoid';
 import 'npm:lokijs@1.5.12';
 import 'npm:pinia@2.1.7';
+import 'npm:hotkeys-js@3.12.0'
 
 type ImportMap = {
   imports: {

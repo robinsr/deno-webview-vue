@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, useCssModule } from 'vue';
 import "simple-keyboard/build/css/index.css";
+
+import { ref, useCssModule } from 'vue';
 import Keyboards from '@keys/keyboard-config.ts';
 import type { KeySym, KeyboardSpec, SectionLayout, KeyboardRow } from '@keys/key-types.ts'
 import KeyboardKey from './KeyboardKey.vue';
@@ -10,8 +11,6 @@ import { styleMap } from './style-map.ts';
 useCssModule('colors');
 
 const $currentKB = ref<KeyboardSpec>(Keyboards['apple_MB110LL']);
-
-const props = withDefaults(defineProps<{}>(), {});
 
 const emit = defineEmits<{
   (e: 'onKeyPress', key: { button: string; }): void;
@@ -213,24 +212,47 @@ const sectionClass = (kb: SectionLayout) => {
 :global(:root) {
   --std-key-height: 100%;
   --sm-key-height: 75%;
-  --default-key-color: rgb(255 255 255);
   --mod-key-color: rgb(180 180 180);
   --std-key-hl-color: rgb(129 86 201);
   --mod-key1-hl-color: rgb(54 187 153);
   --mod-key2-hl-color: rgb(245 159 0);
   --mod-key3-hl-color: rgb(240 62 62);
-  --key-text-color: rgb(0 0 0);
-  --key-border-color: color-mix(in srgb, var(--default-key-color) 100%, var(--key-text-color) 80%);
-  --container-bg-color-dark: rgb(10% 10% 10%);
-  --container-bg-color-light: rgb(80% 80% 80%);
+  --key-border-color: color-mix(in srgb, var(--kb-key-color) 100%, var(--key-text-color) 80%);
   --kb-font: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+}
+
+/*@media (prefers-color-scheme: light) {
+  :global(:root) {
+    --key-text-color: rgb(0 0 0);
+    --kb-key-color: rgb(255 255 255);
+    --kb-container-bg-color: rgb(80% 80% 80%);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :global(:root) {
+    --key-text-color: rgb(90% 90% 90%);
+    --kb-key-color: rgb(10% 10% 10%);
+    --kb-container-bg-color: rgb(40% 40% 40%);
+  }
+}*/
+
+:global([color-scheme="light"]) {
+  --key-text-color: rgb(0 0 0);
+  --kb-key-color: rgb(255 255 255);
+  --kb-container-bg-color: rgb(80% 80% 80%);
+}
+
+:global([color-scheme="dark"]) {
+  --key-text-color: rgb(90% 90% 90%);
+  --kb-key-color: rgb(10% 10% 10%);
+  --kb-container-bg-color: rgb(40% 40% 40%);
 }
 </style>
 
 <style scoped>
 input {
   border: none;
-
 }
 
 .kb-container {
@@ -245,7 +267,7 @@ input {
 
   border-radius: 5px;
 
-  background-color: var(--container-bg-color-light);
+  background-color: var(--kb-container-bg-color);
   color: var(--key-text-color);
 
   .kb-section.vue-shortcuts {
