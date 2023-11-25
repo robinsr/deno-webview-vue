@@ -1,7 +1,6 @@
 import { type KeySym } from '@keys/key-types.ts';
 import { mapKeySymbols } from '@keys/symbol.ts';
-import { customAlphabet } from 'nanoid'
-const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvwzyz', 10);
+import { nanoid } from "@/utils/nanoid.ts";
 
 export type Maybe<T> = T | null;
 
@@ -73,7 +72,5 @@ const apps: Record<string, ShortcutApp> = [
 ].reduce((acc, app) => {
   return { ...acc, [app.id]: app }
 }, {});
-
-console.trace(apps);
 
 export default apps;

@@ -39,18 +39,30 @@ const getScale = () => {
 </template>
 
 <style scoped>
+:global([color-scheme="dark"]) {
+  --kbd-bg-color: var(--mine-shaft);
+  --kbd-border-color: var(--scorpion);
+}
+
+:global([color-scheme="light"]) {
+  --kbd-bg-color: var(--catskill-white);
+  --kbd-border-color: var(--boulder);
+}
+
 kbd {
-  --kbd-border-color: rgba(0, 0, 0, 1.0);
-
   font-size: 1.0em;
-  border: 1px solid var(--kbd-border-color);
+  border: 0.05em solid var(--keycap-border-color);
   border-radius: 2px;
-  margin-left: 0.25em;
-  margin-right: 0.25em;
+  margin-right: 0;
   padding: 0.125em 0.25em 0.125em 0.25em;
-  color: var(--kb-text-color);
+  color: var(--keycap-text-color);
 
-  background-color: color-mix(in srgb, var(--boulder) 10%, var(--background-color) 100%);
+  + kbd {
+    margin-left: 0.25em;
+  }
+
+  --save-this-background-color: var(--kbd-bg-color);
+  background-color: color-mix(in srgb, var(--keycap-bg-color) 10%, var(--background-color) 100%);
 
   &.key-mod,
   &.key-ws,
@@ -59,19 +71,19 @@ kbd {
   }
 
   &.kbd-color.key-cmd {
-    background-color: color-mix(in srgb, var(--mod1-bg-color) 100%, var(--kb-bg-color) 20%);
+    background-color: color-mix(in srgb, var(--mod1-bg-color) 100%, var(--keycap-bg-color) 20%);
   }
 
   &.kbd-color.key-shift {
-    background-color: color-mix(in srgb, var(--mod2-bg-color) 100%, var(--kb-bg-color) 20%);
+    background-color: color-mix(in srgb, var(--mod2-bg-color) 100%, var(--keycap-bg-color) 20%);
   }
 
   &.kbd-color.key-ctrl {
-    background-color: color-mix(in srgb, var(--mod3-bg-color) 100%, var(--kb-bg-color) 20%);
+    background-color: color-mix(in srgb, var(--mod3-bg-color) 100%, var(--keycap-bg-color) 20%);
   }
 
   &.kbd-color.key-alt {
-    background-color: color-mix(in srgb, var(--mod4-bg-color) 100%, var(--kb-bg-color) 20%);
+    background-color: color-mix(in srgb, var(--mod4-bg-color) 100%, var(--keycap-bg-color) 20%);
   }
 }
 </style>

@@ -33,7 +33,7 @@ const profile = 'default';
 
 const view = useViewStore();
 const $isActive = computed(() => view.keyIds.includes(id));
-const $showInlay = computed(() => view.kbMode === 'inlay');
+const $showInlay = computed(() => view.keyboard.mode === 'inlay');
 
 const data = useDataStore();
 
@@ -83,17 +83,42 @@ const btnClass = [
 <template>
   <div ref="el"
        style="position: relative;"
-      @click.prevent.stop="handleClick"
-      :data-skbtn="$id"
-      :key="$dataKeyId"
-      :class="[ btnClass, { 'highlight-btn': $isActive } ]">
+       @click.prevent.stop="handleClick"
+       :data-skbtn="$id"
+       :key="$dataKeyId"
+       :class="[ btnClass, { 'highlight-btn': $isActive } ]">
     <span>{{ $cap }}</span>
     <div class="ex-hg-button-inlay" :style="{ 'opacity': $showInlay ? 100 : 0 }">
-      <KBD :symbols="$matches" :use-colors="true" :scale="50" />
+      <KBD :symbols="$matches" :use-colors="true" :scale="60" />
     </div>
     <KeyInfo :sym="props.symbol" :show="$showInfo" :context="el"></KeyInfo>
   </div>
 </template>
+
+<style module="key-colors">
+:global(:root) {
+  --std-key-hl-color: var(--fuchsia-blue);
+
+  --mod-key-color: var(--boulder);
+  --mod1-bg-color: var(--curious-blue);
+  --mod2-bg-color: var(--keppel);
+  --mod3-bg-color: var(--orange-peel);
+  --mod4-bg-color: var(--flamingo);
+  --kb-font: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+}
+
+:global([color-scheme="light"]) {
+  --keycap-text-color: var(--mine-shaft);
+  --keycap-bg-color: var(--catskill-white);
+  --keycap-border-color: color-mix(in srgb, var(--catskill-white) 100%, white 80%);
+}
+
+:global([color-scheme="dark"]) {
+  --keycap-text-color: var(--catskill-white);
+  --keycap-bg-color: var(--mine-shaft);
+  --keycap-border-color: color-mix(in srgb, var(--mine-shaft) 100%, black 80%);
+}
+</style>
 
 <style scoped>
 .ex-hg-button {
@@ -106,8 +131,8 @@ const btnClass = [
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  border-bottom: 1/5% solid var(--key-border-color);
-  border-radius: calc(0.4cqw);
+  border-bottom: 0.1cqw solid var(--keycap-border-color);
+  border-radius: 0.4cqw;
 
   text-wrap: nowrap;
   font-size: 0.85cqw;
@@ -118,38 +143,38 @@ const btnClass = [
   box-shadow: 0 0 3px -1px rgba(0,0,0,.3); /*, var(--key-border-color) 0 3px;*/
   cursor: pointer;
 
-  background-color: var(--kb-bg-color);
+  background-color: var(--keycap-bg-color);
 
 
   &.btn-name-cmd,
   &.btn-name-shift,
   &.btn-name-ctrl,
   &.btn-name-alt {
-    background-color: color-mix(in srgb, var(--mod-key-color) 50%, var(--kb-bg-color));
+    background-color: color-mix(in srgb, var(--mod-key-color) 50%, var(--keycap-bg-color));
     border-bottom-color: color-mix(in srgb, var(--mod-key-color) 50%, #000000 75%);
   }
 
   &.highlight-btn {
-    background-color: color-mix(in srgb, var(--std-key-hl-color) 75%, var(--kb-bg-color));
+    background-color: color-mix(in srgb, var(--std-key-hl-color) 75%, var(--keycap-bg-color));
     border-bottom-color: color-mix(in srgb, var(--std-key-hl-color) 50%, #000000 50%);
 
     &.btn-name-cmd {
-      background-color: color-mix(in srgb, var(--mod1-bg-color) 75%, var(--kb-bg-color));
+      background-color: color-mix(in srgb, var(--mod1-bg-color) 75%, var(--keycap-bg-color));
       border-bottom-color: color-mix(in srgb, var(--mod1-bg-color) 50%, #000000 50%);
     }
 
     &.btn-name-shift {
-      background-color: color-mix(in srgb, var(--mod2-bg-color) 75%, var(--kb-bg-color));
+      background-color: color-mix(in srgb, var(--mod2-bg-color) 75%, var(--keycap-bg-color));
       border-bottom-color: color-mix(in srgb, var(--mod2-bg-color) 50%, #000000 50%);
     }
 
     &.btn-name-ctrl {
-      background-color: color-mix(in srgb, var(--mod3-bg-color) 75%, var(--kb-bg-color));
+      background-color: color-mix(in srgb, var(--mod3-bg-color) 75%, var(--keycap-bg-color));
       border-bottom-color: color-mix(in srgb, var(--mod3-bg-color) 50%, #000000 50%);
     }
 
     &.btn-name-alt {
-      background-color: color-mix(in srgb, var(--mod3-bg-color) 75%, var(--kb-bg-color));
+      background-color: color-mix(in srgb, var(--mod3-bg-color) 75%, var(--keycap-bg-color));
       border-bottom-color: color-mix(in srgb, var(--mod3-bg-color) 50%, #000000 50%);
     }
   }

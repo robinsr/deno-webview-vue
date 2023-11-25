@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import "simple-keyboard/build/css/index.css";
+//import "simple-keyboard/build/css/index.css";
 
-import { ref, useCssModule } from 'vue';
+import { ref, computed } from 'vue';
 import Keyboards from '@keys/keyboard-config.ts';
+import { useViewStore } from '@/store/view-store.ts';
 import type { KeySym, KeyboardSpec, SectionLayout, KeyboardRow } from '@keys/key-types.ts'
 import KeyboardKey from './KeyboardKey.vue';
 import { styleMap } from './style-map.ts';
-
-// todo - still needed?
-useCssModule('colors');
 
 const $currentKB = ref<KeyboardSpec>(Keyboards['apple_MB110LL']);
 
 const emit = defineEmits<{
   (e: 'onKeyPress', key: { button: string; }): void;
 }>();
+
+const store = useViewStore();
+const showSections = computed(() => store.keyboard.show);
 
 const COL_GAP = 0;
 const GRID_GAP = 1;
@@ -23,14 +24,16 @@ const KEY_GAP = GRID_GAP * 0.3;
 const gridContainer = () => {
   const { rows: rowConfig, cols: colConfig } = $currentKB.value.grid;
 
-  const rows = Object.values($currentKB.value.sections)
+  const sections = filterSections();
+
+  const rows = Object.values(sections)
       .map(section => section.rows);
 
-  const numCols = Math.max(...Object.values($currentKB.value.sections)
+  const numCols = Math.max(...Object.values(sections)
       .map(section => section.position.col));
 
   const emptyArr = Array.from({ length: numCols }, () => [] as KeyboardRow[]);
-  const joinedCols = Object.values($currentKB.value.sections)
+  const joinedCols = Object.values(sections)
       .reduce((acc, section) => {
         acc[section.position.col - 1].push(...section.rows);
         return acc;
@@ -50,8 +53,15 @@ const gridContainer = () => {
     'grid-template-rows': `repeat(${rowConfig}, 1fr)`,
     'grid-row-gap': `${GRID_GAP * 4}%`,
     'grid-column-gap': `${GRID_GAP * 3}%`,
-    'aspect-ratio': `${totalLength}/${gridHeight}`
+    //'aspect-ratio': `${totalLength}/${gridHeight}`
   }).get();
+}
+
+const filterSections = () => {
+  const sections = $currentKB.value.sections;
+  return Object.values(sections).filter(section => {
+    return (showSections.value || []).includes(section.name)
+  });
 }
 
 const gridSection = (kb: SectionLayout) => {
@@ -164,7 +174,6 @@ const sectionClass = (kb: SectionLayout) => {
   return [
     'kb-section',
     `kb-section-${kb.name}`,
-    'hg-theme-default',
     'vue-shortcuts',
     'grid-layout',
   ]
@@ -174,7 +183,7 @@ const sectionClass = (kb: SectionLayout) => {
 
 <template>
   <div class="kb-container" :style="gridContainer()">
-    <template v-for="$kbSection in $currentKB.sections">
+    <template v-for="$kbSection in filterSections()">
       <template v-if="hasGrid($kbSection)">
         <div :class="[ ...sectionClass($kbSection), 'hg-row' ]"
              :style="[ gridSection($kbSection), sectionRows($kbSection, 0) ]">
@@ -209,28 +218,11 @@ const sectionClass = (kb: SectionLayout) => {
 </template>
 
 <style module="colors">
-:global(:root) {
-  --std-key-height: 100%;
-  --sm-key-height: 75%;
-  --mod-key-color: var(--boulder);
-  --std-key-hl-color: var(--fuchsia-blue);
-  --mod1-bg-color: var(--curious-blue);
-  --mod2-bg-color: var(--keppel);
-  --mod3-bg-color: var(--orange-peel);
-  --mod4-bg-color: var(--flamingo);
-  --key-border-color: color-mix(in srgb, var(--kb-bg-color) 100%, var(--kb-text-color) 80%);
-  --kb-font: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
-}
-
 :global([color-scheme="light"]) {
-  --kb-text-color: var(--mine-shaft);
-  --kb-bg-color: var(--catskill-white);
   --kb-container-bg-color: rgb(80% 80% 80%);
 }
 
 :global([color-scheme="dark"]) {
-  --kb-text-color: var(--catskill-white);
-  --kb-bg-color: var(--mine-shaft);
   --kb-container-bg-color: rgb(40% 40% 40%);
 }
 </style>
@@ -253,7 +245,7 @@ input {
   border-radius: 5px;
 
   background-color: var(--kb-container-bg-color);
-  color: var(--kb-text-color);
+  color: var(--keycap-text-color);
 
   .kb-section.vue-shortcuts {
     display: inline-block;

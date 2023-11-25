@@ -6,7 +6,6 @@ import { SYMBOL_MAP } from '@keys/symbol.ts';
 import hotkeys from 'hotkeys-js';
 
 import MenuBar from './components/ui/MenuBar.vue';
-import AppsProvider from './providers/AppsProvider.vue';
 
 type InAppHotkey = {
   hotkey: string;
@@ -57,19 +56,16 @@ onMounted(() => {
 onUnmounted(() => {
   hotkeys.unbind(toggleDarkMode.hotkey)
   window.removeEventListener('keyup', keyFocusListener);
-
 });
 
 
 </script>
 
 <template>
-  <AppsProvider>
     <MenuBar />
     <section id="app-content">
       <router-view />
     </section>
-  </AppsProvider>
 </template>
 
 <style scoped>
@@ -82,9 +78,9 @@ onUnmounted(() => {
 <style module="colors">
 :global(:root) {
   --catskill-white: rgb(237, 245, 247);
-  --mine-shaft: rgb(39, 39, 39);
   --boulder: rgb(124, 124, 124);
   --scorpion: rgb(91, 91, 91);
+  --mine-shaft: rgb(39, 39, 39);
   --fuchsia-blue: rgb(129, 86, 201);
   --curious-blue: rgb(28, 126, 214);
   --keppel: rgb(54, 187, 153);

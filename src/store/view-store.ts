@@ -22,12 +22,23 @@ export type KBFocusState = NothingFocused | HotkeyFocus | KeyboardKeyFocus;
 export type KBFocusTarget = KBFocusState['target'];
 
 export type ViewState = {
-  kbMode: KeyboardMode;
+  keyboard: {
+    mode: KeyboardMode;
+    show: string[];
+  }
   focusState: KBFocusState;
 }
 
 const initialState: ViewState = {
-  kbMode: 'regular',
+  keyboard: {
+    mode: 'regular',
+    show: [
+      'main',
+      'control-pad',
+      'arrow-keys',
+      'numpad',
+    ]
+  },
   focusState: {
     target: 'none'
   }
@@ -85,6 +96,15 @@ export const useViewStore = defineStore('view-store', {
           return this.focusState = {
             target: 'none'
           }
+      }
+    },
+    setKeyboardMode(mode?: KeyboardMode) {
+      const modes = [ 'regular' as const, 'inlay' as const ];
+      if (mode) {
+        this.keyboard.mode = mode;
+      } else {
+        modes.splice(modes.indexOf(this.keyboard.mode), 1);
+        this.keyboard.mode = modes[0];
       }
     }
   }
