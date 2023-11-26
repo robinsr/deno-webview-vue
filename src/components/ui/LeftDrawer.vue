@@ -47,7 +47,7 @@ const close = (e: PointerEvent) => {
 
 <style scoped>
 #left-drawer-btn {
-  min-width: 40px;
+  margin-right: 0.80em;
 }
 
 dialog#sidebar {

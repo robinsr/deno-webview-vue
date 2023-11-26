@@ -2,7 +2,7 @@
 import { computed, unref } from 'vue';
 import { HotKey } from '../../shortcuts/ShortcutApp.ts';
 import { useViewStore } from '@/store/view-store.ts';
-import KBD from './KBD.vue';
+import KBD from '@/components/ui/KBD.vue';
 
 const viewStore = useViewStore();
 
@@ -47,6 +47,7 @@ const handleClick = () => {
 
 <style scoped>
 .shortcut-item {
+  --hover-bg-color: 1;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

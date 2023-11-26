@@ -2,20 +2,24 @@
 //import "simple-keyboard/build/css/index.css";
 
 import { ref, computed } from 'vue';
-import Keyboards from '@keys/keyboard-config.ts';
 import { useViewStore } from '@/store/view-store.ts';
-import type { KeySym, KeyboardSpec, SectionLayout, KeyboardRow } from '@keys/key-types.ts'
+import { useDataStore } from '@/store/data-store.ts';
+import type { KeySym, SectionLayout, KeyboardRow } from '@keys/key-types.ts'
 import KeyboardKey from './KeyboardKey.vue';
 import { styleMap } from './style-map.ts';
 
-const $currentKB = ref<KeyboardSpec>(Keyboards['apple_MB110LL']);
 
 const emit = defineEmits<{
   (e: 'onKeyPress', key: { button: string; }): void;
 }>();
 
 const store = useViewStore();
-const showSections = computed(() => store.keyboard.show);
+const $currentKB = computed(() => store.keyboard.spec);
+const $currentSettings = computed(() => store.keyboard.settings);
+const showSections = computed(() => $currentSettings.value.showSections);
+
+const dataStore = useDataStore();
+const appId = computed(() => dataStore.selectedApp.id);
 
 const COL_GAP = 0;
 const GRID_GAP = 1;
@@ -53,7 +57,7 @@ const gridContainer = () => {
     'grid-template-rows': `repeat(${rowConfig}, 1fr)`,
     'grid-row-gap': `${GRID_GAP * 4}%`,
     'grid-column-gap': `${GRID_GAP * 3}%`,
-    //'aspect-ratio': `${totalLength}/${gridHeight}`
+    'aspect-ratio': `${totalLength}/${gridHeight}`
   }).get();
 }
 
@@ -81,7 +85,12 @@ const gridSection = (kb: SectionLayout) => {
     'grid-row-end': row + kb.rows.length,
     'grid-row-gap': `${KEY_GAP}cqh`,
     'grid-column-gap': `${KEY_GAP}cqw`,
-  })
+  });
+
+  // styles.all({
+  //   'container-type': 'inline-size',
+  //   'container-name': 'kb-section-container',
+  // });
 
   return styles.get();
 }
@@ -170,6 +179,8 @@ const gridKey = (section: SectionLayout, rowIndex: number, keyIndex: number, key
   return styles.get();
 }
 
+const keyId = (rowNum: number, buttonNum: number) => `${appId}-r${rowNum}-b${buttonNum}`;
+
 const sectionClass = (kb: SectionLayout) => {
   return [
     'kb-section',
@@ -204,6 +215,7 @@ const sectionClass = (kb: SectionLayout) => {
                :class="[ 'hg-row' ]"
                :style="sectionRows($kbSection, $rowNum)">
             <KeyboardKey v-for="($key, $keyNum) in $row"
+                         :key="keyId($rowNum, $keyNum)"
                          @key-clicked="b => $emit('onKeyPress', b)"
                          :style="gridKey($kbSection, $rowNum, $keyNum, $key)"
                          :grid-left="keyOffset($kbSection, $rowNum, $keyNum, $key)"
@@ -235,7 +247,7 @@ input {
 .kb-container {
   container-type: inline-size;
   container-name: kb-container;
-  width: 100%;
+  width: unset;
   max-width: 1600px;
   height: 100%;
   box-sizing: border-box;

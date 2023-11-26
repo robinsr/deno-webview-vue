@@ -63,15 +63,14 @@ onUnmounted(() => {
 
 <template>
     <MenuBar />
-    <section id="app-content">
-      <router-view />
-    </section>
+    <router-view id="app-content" />
 </template>
 
 <style scoped>
 #app-content {
-  margin: 35px auto;
-  padding: 0px 70px;
+  height: calc(100% - 0px);
+  margin: 0 auto;
+  padding: 0;
 }
 </style>
 

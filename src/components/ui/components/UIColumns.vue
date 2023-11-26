@@ -12,7 +12,6 @@ defineProps<{
 
 <style scoped>
 .app-columns {
-  margin-bottom: 40px;
   column-gap: 15px;
 
   @media screen and (min-width: 920px) {

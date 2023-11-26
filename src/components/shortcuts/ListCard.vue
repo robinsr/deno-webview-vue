@@ -19,14 +19,16 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <UICard :title="title" class="shortcut-group">
-    <ul class="shortcut-list">
-      <ShortcutItem
-          v-for="item in items"
-          :hotkey="item"
-          @mouseenter="$emit('itemHovered', item)"
-          @mouseleave="$emit('itemLeft', item)"/>
-    </ul>
+  <UICard :title="title">
+    <div class="shortcut-group">
+      <ul class="shortcut-list">
+        <ShortcutItem
+            v-for="item in items"
+            :hotkey="item"
+            @mouseenter="$emit('itemHovered', item)"
+            @mouseleave="$emit('itemLeft', item)"/>
+      </ul>
+    </div>
   </UICard>
 </template>
 

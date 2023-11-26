@@ -52,6 +52,7 @@ const close = () => {
         <x-menuitem
             :id="nanoid(10)"
             @click.self.stop="e => onMenuItemClick(e, $item)"
+            :disabled="$item.disabled"
             :value="$item.toggled"
             :togglable="$item.togglable"
             :toggled="$item.toggled">

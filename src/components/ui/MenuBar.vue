@@ -60,10 +60,25 @@ const $menuItems: MenuItem[] = [
           path: '#/view/show-key-inlays',
           togglable: true,
           //toggled: computed(() => viewStore.kbMode === 'inlay'),
-          toggled: viewStore.keyboard.mode === 'inlay',
-          onClick(e) {
+          toggled: viewStore.keyboard.settings.kbDisplay === 'inlay',
+          onClick(_e: PointerEvent) {
             viewStore.setKeyboardMode();
           }
+        },
+        {
+          label: 'Show keyboard sections',
+          path: '#/view/show-key-sections',
+          togglable: false,
+          items: [ Object.values(viewStore.keyboard.spec.sections).map((s, i) => ({
+            label: s.name,
+            path: `#/view/show-key-inlays/${s.name}`,
+            togglable: true,
+            toggled: false,
+            disabled: i === 0,
+            onClick(_e: PointerEvent) {
+              viewStore.toggleSection(s.name);
+            }
+          })) ]
         },
       ]
     ]

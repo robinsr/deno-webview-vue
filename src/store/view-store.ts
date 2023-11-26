@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia';
 import type { HotKey } from '@/shortcuts/ShortcutApp.ts';
-import type { KeySym } from "@keys/key-types.ts";
+import type { KeySym, KeyboardSpec } from "@keys/key-types.ts";
+import Keyboards from '@keys/keyboard-config.ts';
 
-type KeyboardMode = 'regular' | 'inlay';
+type KeyDisplayMode = 'regular' | 'inlay';
 
 type NothingFocused = {
   target: 'none';
@@ -23,21 +24,24 @@ export type KBFocusTarget = KBFocusState['target'];
 
 export type ViewState = {
   keyboard: {
-    mode: KeyboardMode;
-    show: string[];
+    spec: KeyboardSpec;
+    settings: {
+      kbDisplay: KeyDisplayMode;
+      showSections: string[];
+    }
   }
   focusState: KBFocusState;
 }
 
+const defaultKb: KeyboardSpec = Keyboards['apple_MB110LL'];
+
 const initialState: ViewState = {
   keyboard: {
-    mode: 'regular',
-    show: [
-      'main',
-      'control-pad',
-      'arrow-keys',
-      'numpad',
-    ]
+    spec: Keyboards['apple_MB110LL'],
+    settings: {
+      kbDisplay: 'regular',
+      showSections: Object.values(defaultKb.sections).map(s => s.name)
+    }
   },
   focusState: {
     target: 'none'
@@ -98,14 +102,27 @@ export const useViewStore = defineStore('view-store', {
           }
       }
     },
-    setKeyboardMode(mode?: KeyboardMode) {
+    setKeyboardMode(mode?: KeyDisplayMode) {
       const modes = [ 'regular' as const, 'inlay' as const ];
+      const current = this.keyboard.settings.kbDisplay;
       if (mode) {
-        this.keyboard.mode = mode;
+        this.keyboard.settings.kbDisplay = mode;
       } else {
-        modes.splice(modes.indexOf(this.keyboard.mode), 1);
-        this.keyboard.mode = modes[0];
+        modes.splice(modes.indexOf(current), 1);
+        this.keyboard.settings.kbDisplay = modes[0];
       }
+    },
+    toggleSection(section: string) {
+      console.log('Toggling section:', section);
+      let current = this.keyboard.settings.showSections;
+
+      if (current.includes(section)) {
+        current = current.filter(s => s !== section);
+      } else {
+        current = [ ...current, section ];
+      }
+
+      this.keyboard.settings.showSections = current;
     }
   }
 })

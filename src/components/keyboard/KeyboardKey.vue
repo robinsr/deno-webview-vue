@@ -6,7 +6,7 @@ import { SYMBOL_MAP } from '@keys/symbol.ts';
 import { useViewStore } from '@/store/view-store.ts';
 import { useDataStore } from '@/store/data-store.ts';
 import KeyInfo from './KeyInfo.vue';
-import KBD from '@/components/keyboard/KBD.vue';
+import KBD from '@/components/ui/KBD.vue';
 
 const emit = defineEmits<{
   (e: 'keyClicked', item: { button: string; }): void;
@@ -33,7 +33,7 @@ const profile = 'default';
 
 const view = useViewStore();
 const $isActive = computed(() => view.keyIds.includes(id));
-const $showInlay = computed(() => view.keyboard.mode === 'inlay');
+const $showInlay = computed(() => view.keyboard.settings.kbDisplay === 'inlay');
 
 const data = useDataStore();
 
@@ -82,13 +82,12 @@ const btnClass = [
 
 <template>
   <div ref="el"
-       style="position: relative;"
        @click.prevent.stop="handleClick"
        :data-skbtn="$id"
        :key="$dataKeyId"
        :class="[ btnClass, { 'highlight-btn': $isActive } ]">
-    <span>{{ $cap }}</span>
-    <div class="ex-hg-button-inlay" :style="{ 'opacity': $showInlay ? 100 : 0 }">
+    <span class="cap">{{ $cap }}</span>
+    <div :class="[ 'inlay', { 'show': $showInlay } ]">
       <KBD :symbols="$matches" :use-colors="true" :scale="60" />
     </div>
     <KeyInfo :sym="props.symbol" :show="$showInfo" :context="el"></KeyInfo>
@@ -122,6 +121,7 @@ const btnClass = [
 
 <style scoped>
 .ex-hg-button {
+  container-type: normal;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -134,8 +134,6 @@ const btnClass = [
   border-bottom: 0.1cqw solid var(--keycap-border-color);
   border-radius: 0.4cqw;
 
-  text-wrap: nowrap;
-  font-size: 0.85cqw;
 
   transition: background-color 0.1s ease-out;
 
@@ -144,6 +142,11 @@ const btnClass = [
   cursor: pointer;
 
   background-color: var(--keycap-bg-color);
+
+  .cap {
+    text-wrap: nowrap;
+    font-size: 1cqh;
+  }
 
 
   &.btn-name-cmd,
@@ -174,16 +177,20 @@ const btnClass = [
     }
 
     &.btn-name-alt {
-      background-color: color-mix(in srgb, var(--mod3-bg-color) 75%, var(--keycap-bg-color));
-      border-bottom-color: color-mix(in srgb, var(--mod3-bg-color) 50%, #000000 50%);
+      background-color: color-mix(in srgb, var(--mod4-bg-color) 75%, var(--keycap-bg-color));
+      border-bottom-color: color-mix(in srgb, var(--mod4-bg-color) 50%, #000000 50%);
     }
   }
 
-  .ex-hg-button-inlay {
+  .inlay {
     opacity: 0;
     position: absolute;
     top: 0;
     left: 0;
+
+    &.show {
+      opacity: 1;
+    }
   }
 }
 
