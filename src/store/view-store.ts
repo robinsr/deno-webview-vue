@@ -20,15 +20,18 @@ type KeyboardKeyFocus = {
 }
 
 export type KBFocusState = NothingFocused | HotkeyFocus | KeyboardKeyFocus;
+
 export type KBFocusTarget = KBFocusState['target'];
+
+export type KeyboardSettings = {
+  kbDisplay: KeyDisplayMode;
+  showSections: string[];
+}
 
 export type ViewState = {
   keyboard: {
     spec: KeyboardSpec;
-    settings: {
-      kbDisplay: KeyDisplayMode;
-      showSections: string[];
-    }
+    settings: KeyboardSettings;
   }
   focusState: KBFocusState;
 }
@@ -51,10 +54,13 @@ const initialState: ViewState = {
 
 export const useViewStore = defineStore('view-store', {
   state: (): ViewState => initialState,
+
   getters: {
+
     focus: (state): KBFocusTarget => {
       return state.focusState.target;
     },
+
     keys: (state): KeySym[] => {
       switch (state.focusState.target) {
         case 'hotkey':
@@ -66,6 +72,7 @@ export const useViewStore = defineStore('view-store', {
           return [];
       }
     },
+
     keyIds: (state): string[] => {
       switch (state.focusState.target) {
         case 'hotkey':
@@ -77,6 +84,7 @@ export const useViewStore = defineStore('view-store', {
           return [];
       }
     },
+
     hotkey: (state): HotKey | null => {
       if (state.focusState.target === 'hotkey') {
         return state.focusState.hotkey;
@@ -85,7 +93,9 @@ export const useViewStore = defineStore('view-store', {
       }
     }
   },
+
   actions: {
+
     setFocus(target: KBFocusTarget, data?: HotKey | KeySym) {
       switch (target) {
         case 'hotkey':
@@ -102,6 +112,7 @@ export const useViewStore = defineStore('view-store', {
           }
       }
     },
+
     setKeyboardMode(mode?: KeyDisplayMode) {
       const modes = [ 'regular' as const, 'inlay' as const ];
       const current = this.keyboard.settings.kbDisplay;
@@ -112,6 +123,7 @@ export const useViewStore = defineStore('view-store', {
         this.keyboard.settings.kbDisplay = modes[0];
       }
     },
+
     toggleSection(section: string) {
       console.log('Toggling section:', section);
       let current = this.keyboard.settings.showSections;

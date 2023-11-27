@@ -2,12 +2,26 @@
 import { computed } from 'vue';
 import { nanoid } from '@/utils/nanoid.ts';
 import { useDataStore } from '@/store/data-store.ts';
-import { useViewStore } from '@/store/view-store.ts';
+import { useViewStore, KeyboardSettings } from '@/store/view-store.ts';
 import LeftDrawer from "./LeftDrawer.vue";
 import UIMenu, { MenuItem } from './components/UIMenu.vue';
 
+import type { KeyboardSpec } from '@keys/key-types.ts';
+
 const dataStore = useDataStore();
 const viewStore = useViewStore();
+
+const kb = computed(() => ({
+  spec: viewStore.keyboard.spec,
+  settings: viewStore.keyboard.settings,
+}));
+
+const kbSettings: KeyboardSettings = kb.value.settings;
+const kbSpec: KeyboardSpec = kb.value.spec;
+
+const isSectionActive = (section: string) => {
+  return kbSettings.showSections.includes(section);
+}
 
 const $menuItems: MenuItem[] = [
   {
@@ -60,7 +74,7 @@ const $menuItems: MenuItem[] = [
           path: '#/view/show-key-inlays',
           togglable: true,
           //toggled: computed(() => viewStore.kbMode === 'inlay'),
-          toggled: viewStore.keyboard.settings.kbDisplay === 'inlay',
+          toggled: kbSettings.kbDisplay === 'inlay',
           onClick(_e: PointerEvent) {
             viewStore.setKeyboardMode();
           }
@@ -69,11 +83,11 @@ const $menuItems: MenuItem[] = [
           label: 'Show keyboard sections',
           path: '#/view/show-key-sections',
           togglable: false,
-          items: [ Object.values(viewStore.keyboard.spec.sections).map((s, i) => ({
+          items: [ Object.values(kbSpec.sections).map((s, i) => ({
             label: s.name,
             path: `#/view/show-key-inlays/${s.name}`,
             togglable: true,
-            toggled: false,
+            toggled: isSectionActive(s.name),
             disabled: i === 0,
             onClick(_e: PointerEvent) {
               viewStore.toggleSection(s.name);

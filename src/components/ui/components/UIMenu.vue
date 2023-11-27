@@ -30,7 +30,6 @@ const $menu: MenuItem = props.menuItems;
 const $menuRef = ref<Element>(null);
 
 const onMenuItemClick = (e: PointerEvent, menuItem: MenuItem) => {
-  console.debug('UIMenu item click:', e, menuItem);
   if (menuItem.onClick) {
     menuItem.onClick.bind(menuItem)(e);
   }

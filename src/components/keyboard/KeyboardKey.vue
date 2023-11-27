@@ -16,7 +16,6 @@ const props = defineProps<{
   symbol: KeySym;
   rowNum: number;
   buttonNum: number;
-  gridLeft?: number;
 }>();
 
 const el = ref(null);

@@ -1,10 +1,15 @@
 <script setup lang="ts">
 //import "simple-keyboard/build/css/index.css";
+import type {
+  KeySym,
+  KeyboardSpec,
+  SectionLayout,
+  KeyboardRow
+} from '@keys/key-types.ts'
 
-import { ref, computed } from 'vue';
-import { useViewStore } from '@/store/view-store.ts';
+import { ref, computed, watchEffect } from 'vue';
+import { useViewStore, KeyboardSettings } from '@/store/view-store.ts';
 import { useDataStore } from '@/store/data-store.ts';
-import type { KeySym, SectionLayout, KeyboardRow } from '@keys/key-types.ts'
 import KeyboardKey from './KeyboardKey.vue';
 import { styleMap } from './style-map.ts';
 
@@ -13,10 +18,16 @@ const emit = defineEmits<{
   (e: 'onKeyPress', key: { button: string; }): void;
 }>();
 
-const store = useViewStore();
-const $currentKB = computed(() => store.keyboard.spec);
-const $currentSettings = computed(() => store.keyboard.settings);
-const showSections = computed(() => $currentSettings.value.showSections);
+const viewStore = useViewStore();
+
+const kb = computed(() => ({
+  spec: viewStore.keyboard.spec,
+  settings: viewStore.keyboard.settings,
+}));
+
+const kbSettings: KeyboardSettings = kb.value.settings;
+const kbSpec: KeyboardSpec = kb.value.spec;
+
 
 const dataStore = useDataStore();
 const appId = computed(() => dataStore.selectedApp.id);
@@ -25,64 +36,80 @@ const COL_GAP = 0;
 const GRID_GAP = 1;
 const KEY_GAP = GRID_GAP * 0.3;
 
-const gridContainer = () => {
-  const { rows: rowConfig, cols: colConfig } = $currentKB.value.grid;
+const gridContainer = computed(() => {
+  const { rows: rowConfig } = kbSpec.grid;
 
   const sections = filterSections();
 
-  const rows = Object.values(sections)
-      .map(section => section.rows);
-
-  const numCols = Math.max(...Object.values(sections)
+  const columnCount = Math.max(...sections
       .map(section => section.position.col));
 
-  const emptyArr = Array.from({ length: numCols }, () => [] as KeyboardRow[]);
-  const joinedCols = Object.values(sections)
+  const emptyArr = Array.from({ length: columnCount }, () => [] as KeyboardRow[]);
+  const stackedColumns = sections
       .reduce((acc, section) => {
         acc[section.position.col - 1].push(...section.rows);
         return acc;
-      }, emptyArr);
+      }, emptyArr)
+      .filter(col => col.length > 0);
 
-  const colLengths = joinedCols.map(rows => longestRow(rows))
-  const totalLength = colLengths.reduce((t, x) => t + x, 0);
+  const columnGridWidths = stackedColumns.map(rows => longestRow(rows))
+  const totalGridWidth = columnGridWidths.reduce((t, x) => t + x, 0);
+
+  const rows = sections.map(section => section.rows);
   const gridHeight = tallest(rows);
 
-  const colTemplate = colLengths
-      .map(l => `${Math.floor((l*100) / totalLength)}fr`)
+  const _debug = { sections, rows, columnCount, stackedColumns, columnGridWidths, totalGridWidth, gridHeight }
+  //console.debug(_debug);
+
+  const gridColumnFrs = columnGridWidths
+      .map(l => `${Math.floor((l*100) / totalGridWidth)}fr`)
       .join(' ');
 
   return styleMap('gridContainer').all({
     'display': 'grid',
-    'grid-template-columns': colTemplate,
+    'grid-template-columns': gridColumnFrs,
     'grid-template-rows': `repeat(${rowConfig}, 1fr)`,
     'grid-row-gap': `${GRID_GAP * 4}%`,
     'grid-column-gap': `${GRID_GAP * 3}%`,
-    'aspect-ratio': `${totalLength}/${gridHeight}`
+    'aspect-ratio': `${totalGridWidth}/${gridHeight}`
   }).get();
-}
+});
 
-const filterSections = () => {
-  const sections = $currentKB.value.sections;
-  return Object.values(sections).filter(section => {
-    return (showSections.value || []).includes(section.name)
+const filterSections = (): SectionLayout[] => {
+  const sections = Object.values(kbSpec.sections).filter(section => {
+    return (kbSettings.showSections || []).includes(section.name)
+  });
+
+  const clampColumns = sections
+      .map(section => section.position.col)
+      .reduce((set, section) => set.add(section), new Set()).size;
+
+  return sections.map(section => {
+    return {
+      ...section,
+      position: {
+        row: section.position.row,
+        col: Math.min(section.position.col, clampColumns)
+      }
+    }
   });
 }
 
-const gridSection = (kb: SectionLayout) => {
-  const { row, col } = kb.position;
+const gridSection = (section: SectionLayout) => {
+  const { row, col } = section.position;
 
   const styles = styleMap('gridSection');
 
-  if (!kb.grid) {
+  if (!section.grid) {
     styles.add('display', 'grid');
   }
 
   styles.all({
-    'aspect-ratio': `${longestRow(kb.rows)}/${heightMax(kb.rows)}`,
+    'aspect-ratio': `${longestRow(section.rows)}/${heightMax(section.rows)}`,
     'grid-column-start': col,
     'grid-column-end': col + 1,
     'grid-row-start': row,
-    'grid-row-end': row + kb.rows.length,
+    'grid-row-end': row + section.rows.length,
     'grid-row-gap': `${KEY_GAP}cqh`,
     'grid-column-gap': `${KEY_GAP}cqw`,
   });
@@ -95,8 +122,8 @@ const gridSection = (kb: SectionLayout) => {
   return styles.get();
 }
 
-const sectionRows = (kb: SectionLayout, rowI: number) => {
-  const { grid, rows } = kb;
+const sectionRows = (section: SectionLayout, rowI: number) => {
+  const { grid, rows } = section;
 
   const styles = styleMap('sectionRows')
       .add('display', 'grid');
@@ -108,15 +135,15 @@ const sectionRows = (kb: SectionLayout, rowI: number) => {
     styles.add('grid-template-columns', exact(grid.cols));
   } else {
     styles.add('grid-template-rows', '1fr');
-    styles.add('grid-template-columns', `repeat(${rowTotal(rows, rowI)}fr)`);
+    styles.add('grid-template-columns', `repeat(${rowWidth(rows, rowI)}fr)`);
     styles.add('grid-column-gap', `${KEY_GAP}cqw`);
   }
 
   return styles.get();
 }
 
-const hasGrid = (kb: SectionLayout): boolean => {
-  return !!kb.grid;
+const hasGrid = (section: SectionLayout): boolean => {
+  return !!section.grid;
 }
 
 // todo - determine programmatically
@@ -130,12 +157,12 @@ const heightMax = (rows: KeyboardRow[]): number => {
   return rows.length * KEY_HEIGHT;
 }
 
-const rowTotal = (rows: KeyboardRow[], rowIndex: number): number => {
+const rowWidth = (rows: KeyboardRow[], rowIndex: number): number => {
   return rows[rowIndex].reduce((off, k) => off + k.width + COL_GAP, 0);
 }
 
 const longestRow = (rows: KeyboardRow[]): number => {
-  return Math.max(...rows.map((_r, i) => rowTotal(rows, i)));
+  return Math.max(...rows.map((_r, i) => rowWidth(rows, i)));
 }
 
 const keyOffset = (section: SectionLayout, rowIndex: number, keyIndex: number, key: KeySym): number => {
@@ -179,27 +206,33 @@ const gridKey = (section: SectionLayout, rowIndex: number, keyIndex: number, key
   return styles.get();
 }
 
-const keyId = (rowNum: number, buttonNum: number) => `${appId}-r${rowNum}-b${buttonNum}`;
+const keyId = (section: SectionLayout, rowNum: number, buttonNum: number) => {
+  return `${appId.value}-${section.name}-r${rowNum}-b${buttonNum}`;
+}
 
-const sectionClass = (kb: SectionLayout) => {
+const sectionClass = (section: SectionLayout) => {
   return [
     'kb-section',
-    `kb-section-${kb.name}`,
+    `kb-section-${section.name}`,
     'vue-shortcuts',
     'grid-layout',
   ]
 }
 
+watchEffect(() => console.log(gridContainer.value));
+
 </script>
 
 <template>
-  <div class="kb-container" :style="gridContainer()">
+  <div class="kb-container" :style="gridContainer">
     <template v-for="$kbSection in filterSections()">
       <template v-if="hasGrid($kbSection)">
         <div :class="[ ...sectionClass($kbSection), 'hg-row' ]"
              :style="[ gridSection($kbSection), sectionRows($kbSection, 0) ]">
           <template v-for="($row, $rowNum) in $kbSection.rows">
             <KeyboardKey v-for="($key, $keyNum) in $row"
+                         :key="keyId($kbSection, $rowNum, $keyNum)"
+                         :id="keyId($kbSection, $rowNum, $keyNum)"
                          @key-clicked="b => $emit('onKeyPress', b)"
                          :style="gridKey($kbSection, $rowNum, $keyNum, $key)"
                          :symbol="$key"
@@ -215,10 +248,10 @@ const sectionClass = (kb: SectionLayout) => {
                :class="[ 'hg-row' ]"
                :style="sectionRows($kbSection, $rowNum)">
             <KeyboardKey v-for="($key, $keyNum) in $row"
-                         :key="keyId($rowNum, $keyNum)"
+                         :key="keyId($kbSection, $rowNum, $keyNum)"
+                         :id="keyId($kbSection, $rowNum, $keyNum)"
                          @key-clicked="b => $emit('onKeyPress', b)"
                          :style="gridKey($kbSection, $rowNum, $keyNum, $key)"
-                         :grid-left="keyOffset($kbSection, $rowNum, $keyNum, $key)"
                          :symbol="$key"
                          :row-num="$rowNum+1"
                          :button-num="$keyNum+1"/>
