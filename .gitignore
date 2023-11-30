@@ -26,3 +26,6 @@ dist-ssr
 
 # Only used for IDE code completion
 tsconfig.json
+
+# Ignore any flagged file
+*.ignore.*

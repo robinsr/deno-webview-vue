@@ -23,7 +23,7 @@ const $columns = ref<number>(3);
 const $inspect = ref<object>();
 
 const $keys = computed((): KeySym[] => {
-  if ($focusTarget !== 'none') {
+  if ($focusTarget.value !== 'none') {
     return viewStore.keys;
   }
 
@@ -31,9 +31,9 @@ const $keys = computed((): KeySym[] => {
 });
 
 const onShortcutHover = (hovered: HotKey) => {
-  if ($focusTarget === 'none') {
-    $highlighted.value = hovered;
-  }
+  // if ($focusTarget === 'none') {
+  //   $highlighted.value = hovered;
+  // }
 }
 
 
@@ -45,13 +45,15 @@ const onShortcutHover = (hovered: HotKey) => {
       <h1>Hotkeys for {{ $selectedApp.name }}</h1>
     </header>
     <section class="shortcut-viewer-list">
-      <UIColumns :count="$columns" v-if="$selectedApp" class="shortcut-list">
+       <div v-if="$selectedApp" class="shortcut-list">
         <ListCard v-for="($group, $gi) in $selectedApp.groupings"
                   :key="$selectedApp.name+$gi"
                   :title="$group.name"
                   :items="$group.items"
+                  class="flex"
                   @item-hovered="onShortcutHover" />
-      </UIColumns>
+       </div>
+      <UIColumns :count="$columns"></UIColumns>
     </section>
     <section class="keyboard">
       <Keyboard />
@@ -76,6 +78,8 @@ const onShortcutHover = (hovered: HotKey) => {
   flex-direction: column;
   align-items: normal;
   justify-content: space-between;
+  width: 100%;
+  max-width: 1600px;
 
   overflow: hidden;
 
@@ -88,7 +92,8 @@ const onShortcutHover = (hovered: HotKey) => {
   }
 
   & .keyboard {
-    flex: 0 0 30vh;
+
+    flex-shrink: 1;
   }
 
   & header h1 {
@@ -102,7 +107,7 @@ const onShortcutHover = (hovered: HotKey) => {
     justify-content: flex-start;
     align-items: center;
 
-    width: 100%;
+
     margin-bottom: 1.5em;
     overflow-y: scroll;
 
@@ -122,7 +127,24 @@ const onShortcutHover = (hovered: HotKey) => {
     }
 
     & .shortcut-list {
-      width: 98%;
+      column-count: 3;
+      column-width: calc(100vw/3 - 50px);
+
+      x-backdrop {
+        display: none;
+      }
+
+      &.flex {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        height: 60vh;
+
+        > * {
+          flex: 1 1 auto;
+          width: calc(100vw/3 - 20px);
+        }
+      }
     }
   }
 }

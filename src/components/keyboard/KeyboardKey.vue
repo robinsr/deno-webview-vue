@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, unref, watchEffect } from 'vue';
+import { computed, ref, unref, type ComputedRef } from 'vue';
 import { storeToRefs } from 'pinia';
 import { KeySym } from '@keys/key-types.ts';
 import { SYMBOL_MAP } from '@keys/symbol.ts';
@@ -7,6 +7,7 @@ import { useViewStore } from '@/store/view-store.ts';
 import { useDataStore } from '@/store/data-store.ts';
 import KeyInfo from './KeyInfo.vue';
 import KBD from '@/components/ui/KBD.vue';
+import type { HotKey } from '@/shortcuts/ShortcutApp.ts';
 
 const emit = defineEmits<{
   (e: 'keyClicked', item: { button: string; }): void;
@@ -26,9 +27,7 @@ const { id, name, legend, width, height, type } = unref(props.symbol);
 const $id = ref(id);
 const $name = ref(name);
 const $cap = ref(legend.cap);
-
 const profile = 'default';
-
 
 const view = useViewStore();
 const $isActive = computed(() => view.keyIds.includes(id));
@@ -38,28 +37,28 @@ const data = useDataStore();
 
 const dataRefs = storeToRefs(data);
 
-const $matches = computed(() => {
+const $hotkeys: ComputedRef<HotKey[]> = computed(() => {
+  return dataRefs.selectedApp.value?.matchKey(id) || [];
+})
+
+const $modkeys: ComputedRef<KeySym[]> = computed(() => {
   if (type === 'mod') {
     return [];
   }
 
-  const hotkeys = dataRefs.selectedApp.value?.matchKey(id) || [];
-
-  return hotkeys.flatMap(hk => {
+  const modKeys = $hotkeys.value.flatMap(hotkey => {
     return [ 'meta', 'ctrl', 'alt', 'shift' ].filter(modKey => {
-      return !!hk.symbols.find(sym => sym.matches(modKey));
+      return !!hotkey.symbols.find(sym => sym.matches(modKey));
     });
-  })
-  .reduce((acc, modKey) => Array.from(new Set([ ...acc, modKey ])), [])
-  .map(modKey => SYMBOL_MAP.get(modKey));
-});
+  });
 
-const $dataKeyId = computed(() => {
-  return dataRefs.selectedApp.value.id + `-r${props.rowNum}-b${props.buttonNum}`;
+  return Array.from(new Set<string>(modKeys))
+      .map(modKey => SYMBOL_MAP.get(modKey));
 });
 
 const handleClick = (e: PointerEvent) => {
   if (e.shiftKey) {
+    console.log(props.symbol);
     $showInfo.value = !$showInfo.value;
   } else {
     if (view.focus === 'key' && view.keyIds[0] === props.symbol.id) {
@@ -83,20 +82,26 @@ const btnClass = [
   <div ref="el"
        @click.prevent.stop="handleClick"
        :data-skbtn="$id"
-       :key="$dataKeyId"
        :class="[ btnClass, { 'highlight-btn': $isActive } ]">
-    <span class="cap">{{ $cap }}</span>
     <div :class="[ 'inlay', { 'show': $showInlay } ]">
-      <KBD :symbols="$matches" :use-colors="true" :scale="60" />
+      <KBD
+          :symbols="$modkeys"
+          :use-colors="true"
+          font-size="0.6cqh"/>
     </div>
-    <KeyInfo :sym="props.symbol" :show="$showInfo" :context="el"></KeyInfo>
+    <span class="cap">{{ $cap }}</span>
+    <KeyInfo
+        :sym="props.symbol"
+        :modKeys="$modkeys"
+        :hotKeys="$hotkeys"
+        :show="$showInfo"
+        :context="el"/>
   </div>
 </template>
 
 <style module="key-colors">
 :global(:root) {
   --std-key-hl-color: var(--fuchsia-blue);
-
   --mod-key-color: var(--boulder);
   --mod1-bg-color: var(--curious-blue);
   --mod2-bg-color: var(--keppel);
@@ -133,6 +138,7 @@ const btnClass = [
   border-bottom: 0.1cqw solid var(--keycap-border-color);
   border-radius: 0.4cqw;
 
+  position: relative;
 
   transition: background-color 0.1s ease-out;
 
@@ -182,14 +188,22 @@ const btnClass = [
   }
 
   .inlay {
-    opacity: 0;
+    height: 0;
+    display: inline-block;
+    overflow: hidden;
+    transition: height 800ms;
+
     position: absolute;
-    top: 0;
     left: 0;
+    top: 0;
 
     &.show {
-      opacity: 1;
+      height: 2cqh;
     }
+  }
+
+  .inlay > span {
+    display: inline-flex;
   }
 }
 

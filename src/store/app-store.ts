@@ -1,35 +1,26 @@
 import { defineStore } from 'pinia';
-import type { ViewState } from '@/store/view-store.ts';
-import type { DataState } from '@/store/data-store.ts';
+import { ref } from 'vue';
 
 
-export interface AppState {
-  debug: boolean;
-  theme: {
-    useDarkMode: boolean;
-  },
-  // data: DataState;
-  // view: ViewState;
-}
+export const useStore = defineStore('app-store',() => {
+  const debug = ref(false);
 
-const defaultState: AppState = {
-  debug: false,
-  theme: {
-    useDarkMode: true
-  }
-}
+  const theme = ref<{
+    useDarkMode: boolean
+  }>({
+    useDarkMode: false
+  });
 
-export const useStore = defineStore('app-store', {
-  state: (): AppState => defaultState,
-  getters: {
+  const toggleDarkMode = () => {
+    theme.value.useDarkMode = !theme.value.useDarkMode;
+  };
 
-  },
-  actions: {
-    toggleDarkMode() {
-      this.theme.useDarkMode = !this.theme.useDarkMode;
-    },
-    toggleDebug() {
-      this.debug = !this.debug;
-    }
+  const toggleDebug = () => {
+    debug.value = !debug.value;
+  };
+
+  return {
+    debug, theme,
+    toggleDarkMode, toggleDebug
   }
 });

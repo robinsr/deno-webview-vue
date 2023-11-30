@@ -1,4 +1,4 @@
-import { ShortcutGroup } from '../ShortcutApp.ts';
+import { ShortcutGroup } from '../shortcuts/ShortcutApp.ts';
 
 const GithubDesktop: ShortcutGroup = {
   name: "GitHub Desktop",

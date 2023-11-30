@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue';
 import { useStore } from '@/store/app-store.ts';
 import { useViewStore } from '@/store/view-store.ts';
 import { SYMBOL_MAP } from '@keys/symbol.ts';
-import hotkeys from 'hotkeys-js';
+import { useWindowListener, useHotKey, isKbEvent, logKey } from '@/hooks/useWindowListener.ts';
 
 import MenuBar from './components/ui/MenuBar.vue';
 
@@ -15,48 +14,30 @@ type InAppHotkey = {
 const store = useStore();
 const viewStore = useViewStore();
 
-const logKey = (handler: string, e: KeyboardEvent) => {
-  const { type, key, code } = e;
-  console.debug(handler, { type, key, code }, e);
-}
-
 const blockKeys: string[] = [];
-
-const toggleDarkMode: InAppHotkey = {
-  hotkey: 'cmd+k',
-  handler: (e: KeyboardEvent, _handler: unknown) => {
-    logKey('toggleDarkMode', e);
-    store.toggleDarkMode();
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    blockKeys.push('Meta');
-  }
-}
-
-const keyFocusListener = (e: KeyboardEvent) => {
-  logKey('keyFocusListener', e);
-
-  if (e.key === blockKeys.at(-1)) {
-    return blockKeys.pop();
-  }
-
-  const symbol = SYMBOL_MAP.find(e.key, false);
-  if (!symbol.matches('unknown')) {
-    viewStore.setFocus('key', symbol);
-  }
-}
-
-
-
-onMounted(() => {
-  hotkeys(toggleDarkMode.hotkey, { keyup: true, keydown: true }, toggleDarkMode.handler)
-  window.addEventListener('keyup', keyFocusListener);
+useHotKey('cmd+k', (e: KeyboardEvent) => {
+  logKey('toggleDarkMode', e);
+  store.toggleDarkMode();
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  blockKeys.push('Meta');
 });
 
-onUnmounted(() => {
-  hotkeys.unbind(toggleDarkMode.hotkey)
-  window.removeEventListener('keyup', keyFocusListener);
+useWindowListener('keyup', (e: object) => {
+  if (isKbEvent(e)) {
+    logKey('keyFocusListener', e);
+
+    if (e.key === blockKeys.at(-1)) {
+      return blockKeys.pop();
+    }
+
+    const symbol = SYMBOL_MAP.find(e.key, false);
+    if (!symbol.matches('unknown')) {
+      viewStore.setFocus('key', symbol);
+    }
+  }
 });
+
 
 
 </script>

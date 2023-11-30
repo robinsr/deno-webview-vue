@@ -1,6 +1,7 @@
 {
   "imports": {
     "@/": "./src/",
+    "@data/": "./src/data/",
     "@ui/": "./src/components/ui/components/",
     "@utils/": "/Users/ryan/workspace/deno/utils/",
     "@keys/": "/Users/ryan/workspace/deno/deno-keys/keys/",

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted, onUnmounted } from 'vue';
 import { nanoid } from '@/utils/nanoid.ts';
 import { useDataStore } from '@/store/data-store.ts';
 import { useViewStore, KeyboardSettings } from '@/store/view-store.ts';
 import LeftDrawer from "./LeftDrawer.vue";
 import UIMenu, { MenuItem } from './components/UIMenu.vue';
+import { useWindowListener, useHotKey } from '@/hooks/useWindowListener.ts';
 
 import type { KeyboardSpec } from '@keys/key-types.ts';
 
@@ -41,6 +42,7 @@ const $menuItems: MenuItem[] = [
           items: [ dataStore.appList.map(app => ({
             label: app.name,
             path: `#/file/open/app/${app.id}`,
+            close: true,
             onClick(_e: PointerEvent) {
               dataStore.setSelectedApp(app.id);
           }
@@ -73,6 +75,8 @@ const $menuItems: MenuItem[] = [
           label: 'Show key inlays',
           path: '#/view/show-key-inlays',
           togglable: true,
+          shortcut: ['⌘⇧K'],
+          command: 'cmd+shift+k',
           //toggled: computed(() => viewStore.kbMode === 'inlay'),
           toggled: kbSettings.kbDisplay === 'inlay',
           onClick(_e: PointerEvent) {
@@ -89,6 +93,7 @@ const $menuItems: MenuItem[] = [
             togglable: true,
             toggled: isSectionActive(s.name),
             disabled: i === 0,
+            close: false,
             onClick(_e: PointerEvent) {
               viewStore.toggleSection(s.name);
             }
@@ -98,6 +103,18 @@ const $menuItems: MenuItem[] = [
     ]
   },
 ];
+
+const kbCommands = $menuItems
+    .map(m => m.items)
+    .flat(2)
+    .filter(item => item.command)
+    .forEach(item => {
+      useHotKey(item.command, item.onClick);
+    })
+
+
+console.log(kbCommands);
+
 </script>
 
 <template>

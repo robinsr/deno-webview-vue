@@ -22,7 +22,15 @@ const $singleMatch = computed(() => {
   return !viewStore.hotkey && keyIds.includes(viewStore.keyIds[0] || '');
 });
 
-const handleClick = () => {
+const openMenu = (e: PointerEvent) => {
+  console.log(props.hotkey);
+
+  console.log(e);
+
+  e.preventDefault();
+}
+
+const handleClick = (e: PointerEvent) => {
   if (viewStore.hotkey && viewStore.hotkey.id === id) {
     viewStore.setFocus('none');
   } else {
@@ -35,6 +43,7 @@ const handleClick = () => {
 <template>
   <li class="shortcut-item"
       :class="[{ 'highlight': $hotkeyMatch || $singleMatch }]"
+      @contextmenu="openMenu"
       @click.stop="handleClick">
 
     <span class="shortcut-item-label">
@@ -42,6 +51,14 @@ const handleClick = () => {
     </span>
 
     <KBD :symbols="hotkey.symbols" />
+
+    <x-contextmenu>
+      <x-menu>
+        <x-menuitem>
+          <x-label>Undo</x-label>
+        </x-menuitem>
+      </x-menu>
+    </x-contextmenu>
   </li>
 </template>
 
@@ -56,6 +73,7 @@ const handleClick = () => {
   border-radius: 0.2em;
   padding: 0 0.2em;
   cursor: pointer;
+  user-select: none;
 
   &:hover {
     background-color: color-mix(in srgb, var(--fuchsia-blue) 50%, var(--background-color));

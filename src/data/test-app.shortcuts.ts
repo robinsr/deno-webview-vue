@@ -1,4 +1,4 @@
-import { ShortcutGroup } from '../ShortcutApp.ts';
+import { ShortcutGroup } from '../shortcuts/ShortcutApp.ts';
 
 const TestApp: ShortcutGroup = {
   name: 'Default App',
@@ -16,6 +16,12 @@ const TestApp: ShortcutGroup = {
       { label: 'Cmd Ctrl Alt N', keys: '⌘ ⌃ ⌥ N' },
       { label: 'Cmd Ctrl Alt Shift O', keys: '⌘ ⌃ ⌥ ⇧ o' }
     ]
+  }, {
+    name: 'Edge Cases',
+    items: [
+      { keys: "⌘+\\", label: "Backward Slash of line" },
+      { keys: "⌘+/", label: "Forward Slash of line" },
+    ],
   }, {
     name: 'Function',
     items: [

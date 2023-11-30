@@ -10,10 +10,12 @@ export type MenuItem = {
   path: string;
   icon?: string;
   shortcut?: string[];
+  command?: string;
   togglable?: Provide<boolean>;
   toggled?: Provide<boolean>;
   disabled?: Provide<boolean>;
   onClick?: (e: PointerEvent) => void;
+  close?: boolean;
   items?: MenuItem[][];
 }
 
@@ -34,7 +36,10 @@ const onMenuItemClick = (e: PointerEvent, menuItem: MenuItem) => {
     menuItem.onClick.bind(menuItem)(e);
   }
 
-  $menuRef.value?.close();
+  if (menuItem.close) {
+    $menuRef.value?.close();
+  }
+
   emit('itemClicked');
 }
 

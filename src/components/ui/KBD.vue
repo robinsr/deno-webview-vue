@@ -6,6 +6,7 @@ const props = defineProps<{
   symbols: KeySym[];
   scale?: number;
   useColors?: boolean;
+  fontSize?: string;
 }>();
 
 const vKey = ref<string>(props.symbols.map(sym => sym.id).join('-'));
@@ -13,14 +14,18 @@ const vKey = ref<string>(props.symbols.map(sym => sym.id).join('-'));
 const $symbols: KeySym[] = unref(props.symbols)
 
 const getScale = () => {
-  if (!props.scale) {
-    return null;
-  }
-
-  return {
+  return props.scale ?  {
     'display': 'block',
     'transform-origin': '8% 40%',
     'transform': `scale(${props.scale}%)`,
+  } : {};
+}
+
+const getTextSize = () => {
+  return props.fontSize ? {
+    'font-size': props.fontSize
+  } : {
+    'font-size': '1.0em'
   }
 }
 
@@ -28,7 +33,10 @@ const getScale = () => {
 
 <template>
   <span :data-keys="vKey" :style="getScale()">
-    <kbd v-for="$s in $symbols" :key="$s.id" :class="{
+    <kbd v-for="$s in $symbols"
+         :key="$s.id"
+         :style="[ getTextSize() ]"
+         :class="{
       ['key-' + $s.type]: true,
       ['key-' + $s.name]: true,
       'kbd-color': props.useColors,
@@ -50,7 +58,6 @@ const getScale = () => {
 }
 
 kbd {
-  font-size: 1.0em;
   border: 0.05em solid var(--keycap-border-color);
   border-radius: 2px;
   margin-right: 0;

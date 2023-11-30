@@ -1,4 +1,4 @@
-import { ShortcutGroup } from '../ShortcutApp.ts';
+import { ShortcutGroup } from '../shortcuts/ShortcutApp.ts';
 
 const SublimeHotkeys: ShortcutGroup = {
   name: "Sublime Text",
@@ -15,8 +15,8 @@ const SublimeHotkeys: ShortcutGroup = {
         { keys: "⌘ D", label: "Select word - Repeat select others occurrences" },
         { keys: "⌃ M", label: "Jump to closing parentheses Repeat to jump to opening parentheses" },
         { keys: "⌃ ⇧ M", label: "Select all contents of the current parentheses" },
-        { keys: "⌘ K, ⌘ K", label: "Delete from cursor to end of line" },
-        { keys: "⌘ K ⌫", label: "Delete from cursor to start of line" },
+        { keys: "⌘ K, ⌘ K", label: "Del" },
+        { keys: "⌘ K ⌫", label: "Del2" },
         { keys: "⌘ ]", label: "Indent current line(s)" },
         { keys: "⌘ [", label: "Un-indent current line(s)" },
         { keys: "⌘ ⇧ D", label: "Duplicate line(s)" },

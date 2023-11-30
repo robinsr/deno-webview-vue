@@ -26,9 +26,9 @@ defineExpose<{
 <template>
   <span class="popover-container" @click.stop="hide">
     <x-popover modal style="--align: top;" ref="el">
-      <main>
+      <div class="main">
         <slot/>
-      </main>
+      </div>
     </x-popover>
   </span>
 </template>

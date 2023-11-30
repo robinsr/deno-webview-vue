@@ -2,7 +2,7 @@
 import type { KeySym } from '@keys/key-types.ts'
 import { ref, watch } from 'vue';
 import type { Ref } from 'vue';
-import UIPopover from '../ui/components/UIPopover.vue';
+import UIPopover from '@ui/UIPopover.vue';
 
 
 const props = defineProps<{
@@ -18,7 +18,7 @@ const popover = ref<InstanceType<typeof UIPopover> | null>(null);
 const showPopover = () => popover.value?.show(props.context);
 const hidePopover = () => popover.value?.hide();
 
-watch(() => props.show, (val, prevVal) => {
+watch(() => props.show, (val: boolean, _prevVal: boolean) => {
   if (val) {
     showPopover();
   } else {
@@ -30,8 +30,8 @@ watch(() => props.show, (val, prevVal) => {
 <template>
   <UIPopover :title="title" class="key-info-popover" ref="popover">
     <x-label><strong>{{ title }}</strong></x-label>
-    <ul v-if="props.show">
-      <li>ID: <code>{{ props.sym.id }}</code></li>
+    <ul>
+      <li>ID: <code>{{ sym.id }}</code></li>
       <li>Accepts: <code v-for="form in props.sym.forms">{{form}}</code></li>
       <li>Sizes:
         <ul>

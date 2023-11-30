@@ -1,5 +1,5 @@
 import { type KeySym } from '@keys/key-types.ts';
-import { mapKeySymbols } from '@keys/symbol.ts';
+import { mapKeySymbols, combinators } from '@keys/symbol.ts';
 import { nanoid } from "@/utils/nanoid.ts";
 
 export type Maybe<T> = T | null;
@@ -45,7 +45,8 @@ export class ShortcutApp implements HotKeyGroup {
 
     this.groupings = app.groupings.map(({ name, items }) => ({
         name, items: items.map(({ label, keys }) => ({
-          id: nanoid(8), label, keys, symbols: mapKeySymbols(keys)
+          id: nanoid(8), label, keys,
+          symbols: mapKeySymbols(keys.split(combinators.space_or_plus))
         }))
       })
     );
@@ -53,24 +54,14 @@ export class ShortcutApp implements HotKeyGroup {
     this.hotkeys = this.groupings.flatMap(g => g.items);
   }
 
+  /**
+   * Returns a list of {@link HotKey}s (keyboard shortcuts) that
+   * use the provided key
+   * @param key
+   */
   matchKey(key: string): HotKey[] {
     return this.hotkeys.filter(hk => {
       return !!hk.symbols.find(sym => sym.matches(key))
     });
   }
 }
-
-
-import ghDesktop from './apps/github-desktop.shortcuts.ts';
-import sublimeText from './apps/sublime.hotkeys.ts';
-import testApp from './apps/test-app.shortcuts.ts';
-
-const apps: Record<string, ShortcutApp> = [
-  new ShortcutApp(testApp),
-  new ShortcutApp(ghDesktop),
-  new ShortcutApp(sublimeText),
-].reduce((acc, app) => {
-  return { ...acc, [app.id]: app }
-}, {});
-
-export default apps;
