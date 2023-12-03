@@ -30,6 +30,13 @@ export type HotKeyGroup = {
   groupings: ItemGroup<HotKey>[]
 }
 
+const modKeyOrder = [ '{meta}', '{ctrl}', '{alt}', '{shift}' ];
+const sortModKeys = (symA: KeySym, symB: KeySym): number => {
+  const oA = modKeyOrder.indexOf(symA.id);
+  const oB = modKeyOrder.indexOf(symB.id);
+  return oA > oB ? -1 : oA < oB ? 1 : 0;
+}
+
 
 export class ShortcutApp implements HotKeyGroup {
   id: string;
@@ -46,7 +53,7 @@ export class ShortcutApp implements HotKeyGroup {
     this.groupings = app.groupings.map(({ name, items }) => ({
         name, items: items.map(({ label, keys }) => ({
           id: nanoid(8), label, keys,
-          symbols: mapKeySymbols(keys.split(combinators.space_or_plus))
+          symbols: mapKeySymbols(keys.split(combinators.space_or_plus)).sort(sortModKeys)
         }))
       })
     );

@@ -60,6 +60,33 @@ const $modkeys: ComputedRef<KeySym[]> = computed(() => {
       .map(modKey => SYMBOL_MAP.get(modKey));
 });
 
+
+const modKeyBgColor = computed(() => {
+
+  const mods = $modkeys.value;
+
+  const modStyles = {
+    'cmd': 'var(--keycap4-bg-color)',
+    'shift': 'var(--keycap5-bg-color)',
+    'ctrl': 'var(--keycap6-bg-color)',
+    'alt': 'var(--keycap7-bg-color)',
+  }
+
+  let offset = 10;
+
+  const styles = mods.map(m => modStyles[m.name])
+      .map((style, i) => `${style} ${offset * i}px ${offset * i + offset}px`);
+
+
+  return {
+    'background': `linear-gradient(
+      110deg,
+      ${styles.join(',')},
+      transparent ${styles.length * offset}px
+    )`
+  }
+})
+
 const handleClick = (e: PointerEvent) => {
   if (e.shiftKey) {
     console.log(props.symbol);
@@ -87,7 +114,7 @@ const btnClass = [
        @click.prevent.stop="handleClick"
        :data-skbtn="$id"
        :class="[ btnClass, { 'highlight-btn': $isActive } ]">
-    <div :class="[ 'inlay', { 'show': $showInlay } ]">
+    <div :class="[ 'inlay', { 'show': $showInlay } ]" :style="modKeyBgColor">
       <KBD
           :symbols="$modkeys"
           :use-colors="true"
@@ -133,6 +160,7 @@ const btnClass = [
   background-color: var(--keycap1-bg-color);
 
   .cap {
+    z-index: 1000;
     text-wrap: nowrap;
     font-size: 1cqh;
     font-family: var(--font-helvetica);
@@ -182,14 +210,16 @@ const btnClass = [
     position: absolute;
     left: 0;
     top: 0;
+    width: 100%;
+    z-index: 0;
 
     &.show {
-      height: 2cqh;
+      height: 1.2cqh;
     }
   }
 
   .inlay > span {
-    display: inline-flex;
+    opacity: 0;
   }
 }
 
