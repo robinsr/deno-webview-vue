@@ -47,6 +47,9 @@ const getTextSize = () => {
 </template>
 
 <style scoped>
+@import url("@/styles/key-colors.css");
+@import url("@/styles/fonts.css");
+
 :global([color-scheme="dark"]) {
   --kbd-bg-color: var(--mine-shaft);
   --kbd-border-color: var(--scorpion);
@@ -58,39 +61,51 @@ const getTextSize = () => {
 }
 
 kbd {
-  border: 0.05em solid var(--keycap-border-color);
+  /*border: 0.05em solid var(--keycap1-border-color);
+  background-color: var(--background-color);*/
+
   border-radius: 2px;
   margin-right: 0;
-  padding: 0.125em 0.25em 0.125em 0.25em;
+  padding: 0.125em 0.08em;
   color: var(--keycap-text-color);
+  font-family: var(--font-helvetica);
 
   + kbd {
-    margin-left: 0.25em;
+    /*margin-left: 0.12em;*/
   }
 
-  --save-this-background-color: var(--kbd-bg-color);
-  background-color: color-mix(in srgb, var(--keycap-bg-color) 10%, var(--background-color) 100%);
+  &.key-alpha {
+    font-weight: bold;
+    padding: 0.15em 0.12em;
+    margin-left: 0.12em;
+  }
 
   &.key-mod,
   &.key-ws,
   &.key-arrow {
-    font-size: 1.2em;
+    font-size: 1.1em;
+    font-family: var(--font-system);
   }
 
+  &.key-mod {
+    color: color-mix(var(--keycap-text-color) 75%, white 100%);
+  }
+
+
   &.kbd-color.key-cmd {
-    background-color: color-mix(in srgb, var(--mod1-bg-color) 100%, var(--keycap-bg-color) 20%);
+    background-color: color-mix(in srgb, var(--keycap4-bg-color) 100%, var(--keycap1-bg-color) 20%);
   }
 
   &.kbd-color.key-shift {
-    background-color: color-mix(in srgb, var(--mod2-bg-color) 100%, var(--keycap-bg-color) 20%);
+    background-color: color-mix(in srgb, var(--keycap5-bg-color) 100%, var(--keycap1-bg-color) 20%);
   }
 
   &.kbd-color.key-ctrl {
-    background-color: color-mix(in srgb, var(--mod3-bg-color) 100%, var(--keycap-bg-color) 20%);
+    background-color: color-mix(in srgb, var(--keycap6-bg-color) 100%, var(--keycap1-bg-color) 20%);
   }
 
   &.kbd-color.key-alt {
-    background-color: color-mix(in srgb, var(--mod4-bg-color) 100%, var(--keycap-bg-color) 20%);
+    background-color: color-mix(in srgb, var(--keycap7-bg-color) 100%, var(--keycap1-bg-color) 20%);
   }
 }
 </style>

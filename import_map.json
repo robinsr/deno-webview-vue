@@ -9,6 +9,7 @@
     "lodash": "https://esm.sh/v133/lodash-es@4.17.21/es2022/lodash-es.mjs",
     "nanoid": "https://esm.sh/v133/nanoid@5.0.2/es2022/nanoid.mjs",
     "corejs": "https://esm.sh/v133/core-js@3.33.2/es2022/actual.mjs",
+    "GUI": "https://esm.sh/v133/lil-gui@0.19.1",
     "vue": "npm:vue@^3.3.4",
     "vite": "npm:vite@^4.4.11",
     "pinia": "npm:pinia@2.1.7",

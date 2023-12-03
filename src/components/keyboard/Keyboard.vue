@@ -1,17 +1,16 @@
 <script setup lang="ts">
-//import "simple-keyboard/build/css/index.css";
+import { ref, computed, watchEffect, useCssModule } from 'vue';
+import { useViewStore, KeyboardSettings } from '@/store/view-store.ts';
+import { useDataStore } from '@/store/data-store.ts';
+import { styleMap } from '@/styles/style-util.ts';
+import KeyboardKey from './KeyboardKey.vue';
+
 import type {
   KeySym,
   KeyboardSpec,
   SectionLayout,
   KeyboardRow
 } from '@keys/key-types.ts'
-
-import { ref, computed, watchEffect } from 'vue';
-import { useViewStore, KeyboardSettings } from '@/store/view-store.ts';
-import { useDataStore } from '@/store/data-store.ts';
-import KeyboardKey from './KeyboardKey.vue';
-import { styleMap } from './style-map.ts';
 
 
 const emit = defineEmits<{
@@ -299,9 +298,9 @@ input {
     width: 100%;
     padding: 0;
     overflow: hidden;
-
     background: none;
-    font-family: var(--kb-font);
+    font-family: var(--font-system);
+    font-weight: 300;
 
     touch-action: manipulation;
     -webkit-user-select: none;

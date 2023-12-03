@@ -2,24 +2,20 @@
 import lightCSS from 'xel/themes/adwaita.css?inline';
 import darkCSS from 'xel/themes/adwaita-dark.css?inline';
 
-import { computed, watchPostEffect, onBeforeMount, onMounted, onUnmounted } from 'vue';
+import { computed, watchPostEffect, onBeforeMount } from 'vue';
+import { createStyleSheet } from '@/styles/style-util.ts';
+import { useMediaQuery } from '@/hooks/useMediaQuery.ts';
 import { useStore } from '@/store/app-store.ts';
+
 import UISwitch from './components/UISwitch.vue';
 
-
-const makeStyleSheet = (content: string): CSSStyleSheet => {
-  const newSheet = new CSSStyleSheet({ disabled: true });
-  newSheet.replaceSync(content);
-  document.adoptedStyleSheets.push(newSheet);
-  return newSheet;
-}
 
 let lightSheet: CSSStyleSheet;
 let darkSheet: CSSStyleSheet;
 
 onBeforeMount(() => {
-  lightSheet = makeStyleSheet(lightCSS);
-  darkSheet = makeStyleSheet(darkCSS);
+  lightSheet = createStyleSheet(lightCSS, true);
+  darkSheet = createStyleSheet(darkCSS, true);
 });
 
 const store = useStore();
@@ -31,19 +27,10 @@ const setColorScheme = (scheme: string) => {
   document.documentElement.setAttribute('color-scheme', scheme);
 }
 
-const mql = window.matchMedia("(prefers-color-scheme: dark)");
-const mqlListener = (e: MediaQueryListEvent) => {
+useMediaQuery("(prefers-color-scheme: dark)", (e: MediaQueryListEvent) => {
   if (e.matches !== $darkMode.value) {
-    store.toggleDarkMode()
+    store.toggleDarkMode();
   }
-}
-
-onMounted(() => {
-  mql.addEventListener("change", mqlListener);
-});
-
-onUnmounted(() => {
-  mql.removeEventListener("change", mqlListener);
 });
 
 watchPostEffect(() => {

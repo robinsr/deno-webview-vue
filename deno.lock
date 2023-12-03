@@ -1361,6 +1361,8 @@
     "https://esm.sh/v133/@types/core-js@latest/index.d.ts": "https://esm.sh/v133/@types/core-js@2.5.8/index.d.ts"
   },
   "remote": {
+    "https://cdn.jsdelivr.net/npm/lil-gui@0.16/+esm": "42641f44174e8ac0bc7254bbaa385a9e886bf7c0595eaf8374e03b96098fc1f8",
+    "https://cdn.jsdelivr.net/npm/lil-gui@0.19.1/+esm": "f1a4572811e9e6eb1478d57432f1b42dfa480544013cf1788ff87903366e66bf",
     "https://deno.land/std@0.170.0/_util/asserts.ts": "d0844e9b62510f89ce1f9878b046f6a57bf88f208a10304aab50efcb48365272",
     "https://deno.land/std@0.170.0/_util/os.ts": "8a33345f74990e627b9dfe2de9b040004b08ea5146c7c9e8fe9a29070d193934",
     "https://deno.land/std@0.170.0/path/_constants.ts": "df1db3ffa6dd6d1252cc9617e5d72165cd2483df90e93833e13580687b6083c3",
@@ -1782,6 +1784,8 @@
     "https://esm.sh/v133/core-js@3.33.2/es2022/core-js.mjs": "645f993dc80bffc2039bb755dccb248e76f31e85c2cd5525037f630eeff1993b",
     "https://esm.sh/v133/dexie@3.2.4": "a9085ffbe13ecc51562d9c293ada3ba4dc0cc6f6a0763fd07b987a646f9c5c92",
     "https://esm.sh/v133/dexie@3.2.4/denonext/dexie.mjs": "f685622969b950b64d250903851542a2152e831c05c260c708adb344a973f591",
+    "https://esm.sh/v133/lil-gui@0.19.1": "46cdaabc3b5be1f0d0bf2e9d59dbf131badb8d21a5c23cf2df3199b08bd95619",
+    "https://esm.sh/v133/lil-gui@0.19.1/denonext/lil-gui.mjs": "45529e00b42117a5c756a1f8d933668ffe1291ed2c70f5b80f0dadc8fd3032fe",
     "https://esm.sh/v133/lodash-es@4.17.21/es2022/lodash-es.mjs": "878cacf66e18225f66ee708db3176b95deb5c480cf6f9a281da8ef1946c10260",
     "https://esm.sh/v133/nanoid@5.0.2": "a330e34d5b54e55d8ec2096d9f0065518cd00a70c6694e63f6f0b752dc4ff3de",
     "https://esm.sh/v133/nanoid@5.0.2/denonext/nanoid.mjs": "92b843153a4edb2fbeb544f84161d5b2e1c299ee7cd7261a2cf6336e0b8d4649",

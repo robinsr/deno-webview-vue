@@ -35,3 +35,14 @@ export const styleMap = (name?: string): StyleMap => {
     }
   }
 }
+
+export const createStyleSheet = (content: string, adopt: boolean): CSSStyleSheet => {
+  const newSheet = new CSSStyleSheet({ disabled: true });
+  newSheet.replaceSync(content);
+
+  if (adopt) {
+    document.adoptedStyleSheets.push(newSheet);
+  }
+
+  return newSheet;
+}

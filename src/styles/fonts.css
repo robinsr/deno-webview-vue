@@ -1,0 +1,5 @@
+:global(:root) {
+  --font-system: -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-helvetica: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+  --font-symbols: AppleSymbols;
+}

@@ -1,0 +1,39 @@
+@import url("./colors.css");
+
+:global([color-scheme="light"]) {
+  --keycap-text-color: var(--mine-shaft);
+
+  --keycap1-bg-color: var(--catskill-white);
+  --keycap1-border-color: color-mix(in srgb, var(--catskill-white) 100%, black 80%);
+  --keycap2-bg-color: var(--fuchsia-blue);
+  --keycap2-border-color: color-mix(in srgb, var(--fuchsia-blue) 100%, black 80%);
+  --keycap3-bg-color: color-mix(in srgb, var(--boulder) 100%, white 50%);
+  --keycap3-border-color: color-mix(in srgb, var(--boulder) 100%, white 0%);
+  --keycap4-bg-color: var(--curious-blue);
+  --keycap4-border-color: color-mix(in srgb, var(--curious-blue) 100%, black 50%);
+  --keycap5-bg-color: var(--keppel);
+  --keycap5-border-color: color-mix(in srgb, var(--keppel) 100%, black 50%);
+  --keycap6-bg-color: var(--orange-peel);
+  --keycap6-border-color: color-mix(in srgb, var(--orange-peel) 100%, black 50%);
+  --keycap7-bg-color: var(--flamingo);
+  --keycap7-border-color: color-mix(in srgb, var(--flamingo) 100%, black 50%);
+}
+
+:global([color-scheme="dark"]) {
+  --keycap-text-color: var(--catskill-white);
+
+  --keycap1-bg-color: var(--mine-shaft);
+  --keycap1-border-color: color-mix(in srgb, var(--mine-shaft) 100%, black 80%);
+  --keycap2-bg-color: var(--fuchsia-blue);
+  --keycap2-border-color: color-mix(in srgb, var(--fuchsia-blue) 100%, black 90%);
+  --keycap3-bg-color: color-mix(in srgb, var(--mine-shaft) 100%, white 25%);
+  --keycap3-border-color: color-mix(in srgb, var(--mine-shaft) 100%, white 10%);
+  --keycap4-bg-color: var(--curious-blue);
+  --keycap4-border-color: color-mix(in srgb, var(--curious-blue) 75%, black 75%);
+  --keycap5-bg-color: var(--keppel);
+  --keycap5-border-color: color-mix(in srgb, var(--keppel) 75%, black 75%);
+  --keycap6-bg-color: var(--orange-peel);
+  --keycap6-border-color: color-mix(in srgb, var(--orange-peel) 75%, black 75%);
+  --keycap7-bg-color: var(--flamingo);
+  --keycap7-border-color: color-mix(in srgb, var(--flamingo) 75%, black 75%);
+}
